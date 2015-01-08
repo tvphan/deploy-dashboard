@@ -1,0 +1,11 @@
+basedev/centos6/shared
+basedev/squeeze/shared
+basedev/precise/shared
+
+jenkins/centos6/shared
+jenkins/squeeze/shared
+jenkins/precise/shared
+
+jenkins/centos6/Dockerfile
+jenkins/squeeze/Dockerfile
+jenkins/precise/Dockerfile

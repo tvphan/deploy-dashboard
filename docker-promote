@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+"""
+docker-promote - Promotes a docker build/CI tag to a release tag ('latest' or 'x.x.x')
+"""
+import optparse as op
+import subprocess
+
+USAGE = "%prog [OPTIONS] REPO_NAME FROM_TAG TO_TAG [TO_TAG ...]"
+
+def promote_id(repo_name, image_id, tags):
+    for tag in tags:
+        proc = subprocess.call(['docker','tag','-f',image_id,repo_name+":"+tag],stdout=subprocess.PIPE)
+
+def get_image_id(repo_name,tag):
+    proc = subprocess.Popen(['docker','images'],stdout=subprocess.PIPE)
+    while True:
+        line = proc.stdout.readline().rstrip()
+        if line != '':
+            fields = line.split()
+            if ((fields[0] == repo_name) and (fields[1] == tag)):
+                return fields[2]
+        else:
+            break
+    return None
+
+def options():
+    return [
+        op.make_option("-v", dest="verbose", default=False,
+            help="Enable verbose output.")
+    ]
+
+def main():
+    parser = op.OptionParser(usage=USAGE, option_list=options())
+    opts, args = parser.parse_args()
+    if len(args) == 0 or len(args) < 3:
+		parser.error("Must have a minumum of 3 arguments")
+    else:
+        repo_name = args[0]
+        from_tag = args[1]
+        to_tags = []
+        for arg in args[2:]:
+            to_tags.append(arg)
+
+        image_id = get_image_id(repo_name,from_tag)
+        if (image_id != None):
+            promote_id(repo_name,image_id,to_tags)
+
+if __name__ == "__main__":
+    main()

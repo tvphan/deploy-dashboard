@@ -1,0 +1,116 @@
+# Dockerfile for generating base development image.j
+
+FROM ubuntu:12.04
+MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
+ENV DEBIAN_FRONTEND noninteractive
+
+# Install erlang from external repo
+RUN apt-get -qq update \
+    && apt-get -qq install -y apt-utils \
+    && apt-get -qq install -y wget ca-certificates \
+    && wget http://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb \
+    && dpkg -i erlang-solutions_1.0_all.deb \
+    && rm erlang-solutions_1.0_all.deb \
+    && apt-get -qq update
+
+ENV ERLANG_VERSION 1:17.1
+RUN apt-get install -y \
+    erlang-base=$ERLANG_VERSION \
+    erlang-asn1=$ERLANG_VERSION \
+    erlang-crypto=$ERLANG_VERSION \
+    erlang-dev=$ERLANG_VERSION \
+    erlang-eunit=$ERLANG_VERSION \
+    erlang-inets=$ERLANG_VERSION \
+    erlang-os-mon=$ERLANG_VERSION \
+    erlang-reltool=$ERLANG_VERSION \
+    erlang-runtime-tools=$ERLANG_VERSION \
+    erlang-ssh=$ERLANG_VERSION \
+    erlang-syntax-tools=$ERLANG_VERSION \
+    erlang-tools=$ERLANG_VERSION \
+    erlang-xmerl=$ERLANG_VERSION \
+    erlang-mnesia=$ERLANG_VERSION \
+    erlang-ssl=$ERLANG_VERSION \
+    erlang-snmp=$ERLANG_VERSION \
+    erlang-wx=$ERLANG_VERSION \
+    erlang-public-key=$ERLANG_VERSION \
+    erlang-webtool=$ERLANG_VERSION
+
+# Install build prereqs from standard repo
+RUN apt-get -qq install -y --no-install-recommends \
+    build-essential \
+    curl \
+    libtool \
+    autoconf \
+    automake \
+    git \
+    ruby \
+    ruby1.8-dev \
+    rubygems \
+    ssh \
+    libopenssl-ruby1.8 \
+    git \
+	python-dev \
+	python-pip \
+	s3cmd \
+    subversion \
+    unzip \
+    wget \
+    sudo  \
+	openjdk-6-jdk \
+    libxml2-dev \
+    libxslt-dev \
+    libcurl4-openssl-dev \
+    libicu-dev \
+    libmozjs185-dev \
+    libpcre3 \
+    libpcre3-dev \
+    libssl-dev \
+    libssl1.0.0 \
+    libsnappy1 \
+    libtool \
+    libyaml-dev \
+    vim
+
+# Install maven
+RUN cd /tmp \
+    && wget -q http://apache.osuosl.org/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz \
+    && mkdir /usr/local/apache-maven \
+    && cd /usr/local/apache-maven \
+    && tar -xzf /tmp/apache-maven-3.2.5-bin.tar.gz \
+    && echo "export M2_HOME=/usr/local/apache-maven/apache-maven-3.2.5" > /etc/profile.d/maven.sh \
+    && echo "export M2=\$M2_HOME/bin" >> /etc/profile.d/maven.sh \
+    && echo "export PATH=\$M2:\$PATH" >> /etc/profile.d/maven.sh \
+    && ln -s /usr/local/apache-maven/apache-maven-3.2.5/bin/mvn /usr/local/bin/mvn 
+
+ENV M2_HOME /usr/local/apache-maven/apache-maven-3.2.5
+
+# Set the locale
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8  
+
+# Install rebar from github
+RUN curl -s -L https://github.com/rebar/rebar/wiki/rebar > /usr/local/bin/rebar
+RUN chmod +rx /usr/local/bin/rebar
+
+# Setup a basic SSH server
+RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
+RUN mkdir -p /var/run/sshd 
+
+# Install fpm
+RUN gem install fpm
+RUN if [ ! -e /usr/local/bin/fpm ]; then \
+        ln -s /var/lib/gems/1.8/bin/fpm /usr/local/bin/fpm; \
+    fi
+
+# Install the python modules
+RUN pip install -q jinja2 pyyaml
+
+RUN apt-get -qq purge
+
+# Standard SSH port
+ONBUILD EXPOSE 22
+ONBUILD WORKDIR /tmp
+
+CMD ["/usr/sbin/sshd", "-D"]

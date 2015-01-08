@@ -1,0 +1,88 @@
+# Dockerfile for the jenkins debian slave
+
+FROM cloudant/basedev-squeeze:{{docker.tag}}
+
+MAINTAINER Cloudant, An IBM Company <support@cloudant.com> 
+ENV DEBIAN_FRONTEND noninteractive
+
+# Setup a root password; simple enough to remember, but hard enough that
+# it won't be cracked immediately.  (ha!)
+RUN echo "root:mypasswd" | chpasswd
+
+# Add user jenkins to the image
+RUN adduser --quiet jenkins
+
+# Set password for the jenkins user (you may want to alter this).
+RUN echo "jenkins:jenkins" | chpasswd
+
+# Configure git
+ADD shared/gitconfig /home/jenkins/.gitconfig
+RUN chown jenkins:jenkins /home/jenkins/.gitconfig
+
+# Configure ssh
+RUN mkdir -p /home/jenkins/.ssh
+ADD shared/id_rsa /home/jenkins/.ssh/id_rsa
+ADD shared/ssh_config /home/jenkins/.ssh/config
+RUN chown -R jenkins:jenkins /home/jenkins/.ssh \
+	&& chmod -R og-rwx /home/jenkins/.ssh
+
+# Grant the user sudo privileges
+RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Add the aptly & cloudant-local public repository to the list
+RUN echo "deb http://repo.aptly.info/ squeeze main" >> /etc/apt/sources.list
+RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-local-public/release/debian/ squeeze main" >> /etc/apt/sources.list
+
+RUN gpg --keyserver keys.gnupg.net --recv-keys 2A194991
+RUN gpg -a --export 2A194991 | apt-key add -
+RUN apt-get -qq update \
+    && apt-get install -qq -y aptly \
+    && apt-get -qq purge
+
+ADD shared/aptly.conf /home/jenkins/.aptly.conf
+RUN chown jenkins:jenkins /home/jenkins/.aptly.conf
+
+# Setup AWS s3cmd tool
+ADD shared/s3cfg /home/jenkins/.s3cfg
+RUN chown -R jenkins:jenkins /home/jenkins/.s3cfg
+
+RUN gpg --keyserver keys.gnupg.net --recv-keys 15BE8E26
+RUN gpg -a --export 15BE8E26 | apt-key add -
+
+USER jenkins 
+
+# Create the aptly repos
+RUN aptly repo create \
+	-config="/home/jenkins/.aptly.conf" \
+	-comment="Cloudant Local Private Continuous Integration Repository" \
+	-distribution="squeeze" \ 
+    cloudant-local-private-ci 
+
+RUN aptly repo create \
+	-config="/home/jenkins/.aptly.conf" \
+	-comment="Cloudant Local Public Continuous Integration Repository" \
+	-distribution="squeeze" \
+    cloudant-local-public-ci
+
+RUN aptly publish repo -distribution=squeeze -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-ci cloudant-local-private/ci/debian
+RUN aptly publish repo -distribution=squeeze -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-ci cloudant-local-public/ci/debian
+
+RUN aptly repo create \
+	-config="/home/jenkins/.aptly.conf" \
+	-comment="Cloudant Local Private Release Repository" \
+	-distribution="squeeze" \
+	cloudant-local-private-release 
+
+RUN aptly repo create \
+	-config="/home/jenkins/.aptly.conf" \
+	-comment="Cloudant Local Public Release Repository" \
+	-distribution="squeeze" \
+	cloudant-local-public-release
+
+RUN aptly publish repo -distribution=squeeze -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-release cloudant-local-private/release/debian
+RUN aptly publish repo -distribution=squeeze -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-release cloudant-local-public/release/debian
+
+USER root
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
