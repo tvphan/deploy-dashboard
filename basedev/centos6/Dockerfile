@@ -4,6 +4,8 @@ FROM centos:centos6
 
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 
+RUN echo "[main]\nip_resolve 4" > /etc/yum/yum.conf
+
 # First install wget so we can install 3rd party repositories
 RUN yum -q -y install wget
 
@@ -89,10 +91,6 @@ RUN /etc/init.d/sshd restart
 
 # Install the python modules
 RUN pip -q install jinja2 pyyaml
-
-Disable IPv6
-RUN sysctl -w net.ipv6.conf.all.disable_ipv6=1
-RUN sysctl -w net.ipv6.conf.default.disable_ipv6=1
 
 CMD ["/usr/sbin/sshd", "-D"]
 
