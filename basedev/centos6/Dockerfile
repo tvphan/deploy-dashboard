@@ -4,7 +4,8 @@ FROM centos:centos6
 
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 
-RUN echo "[main]\nip_resolve 4" > /etc/yum/yum.conf
+RUN echo '[main]' > /etc/yum/yum.conf
+RUN echo 'ip_resolve 4' >> /etc/yum/yum.conf
 
 # First install wget so we can install 3rd party repositories
 RUN yum -q -y install wget
