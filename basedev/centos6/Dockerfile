@@ -4,6 +4,10 @@ FROM centos:centos6
 
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 
+# disable ipv6
+RUN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+RUN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
 # First install wget so we can install 3rd party repositories
 RUN yum -q -y install wget
 
