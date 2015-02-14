@@ -1,4 +1,4 @@
-DIRS= centos6 squeeze precise
+DIRS= squeeze precise
 
 all: build
 
