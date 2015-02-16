@@ -1,36 +1,83 @@
 #!/usr/bin/env python
+
 """
-docker-promote - Promotes a docker build/CI tag to a release tag ('latest' or 'x.x.x')
+docker-promote - Promotes a docker build/CI tag to a release tag (Ex. 'latest' or 'x.x.x')
 """
+
 import optparse as op
 import subprocess
+import sys
 
 USAGE = "%prog [OPTIONS] REPO_NAME FROM_TAG TO_TAG [TO_TAG ...]"
 
-def promote_id(repo_name, image_id, tags):
-    for tag in tags:
-        proc = subprocess.call(['docker','tag','-f',image_id,repo_name+":"+tag],stdout=subprocess.PIPE)
+def _promote_id(repo_name, image_id, tags, verbose=False):
+    """
+    Promotes a docker image using a release tag (Ex. latest, 1.0.0, etc.)
 
-def get_image_id(repo_name,tag):
+    :param repo_name: Name of the docker repository to promote (Ex. cloudant/basedev-centos6).
+    :param image_id: The docker image ID to be promoted.
+    :param tags: The docker tag to apply (Ex. latest, 1.0.0, etc.).
+    :param verbose: If True, generates additional output (Default: False)
+
+    :return: Nothing
+    """
+
+    func_name = sys._getframe().f_code.co_name
+    if verbose:
+        print ("{0}: Arg1 repo_name = {1}".format(func_name, repo_name))
+        print ("{0}: Arg2 image_id = {1}".format(func_name,image_id))
+        print ("{0}: Arg3 tags = {1}".format(func_name,tags))
+
+    for tag in tags:
+        if verbose:
+            print ("{0}: Tagging image {1} to {2}:{3}".format(func_name,image_id, repo_name, tag))
+        subprocess.call(['docker','tag','-f',image_id,repo_name+":"+tag],stdout=subprocess.PIPE)
+
+
+def _get_image_id(repo_name, tag, verbose=False):
+    """
+    Returns the docker image ID of a particular repository/tag.
+
+    :param repo_name: The docker repository name (Ex. cloudant/basedev-centos6)
+    :param tag: The docker tag of the image to retrieve (Ex. 1, 2, 3, etc.)
+    :param verbose: If True, generates additional output (Default: False)
+
+    :return: The docker image ID
+    """
+
+    func_name = sys._getframe().f_code.co_name
+    if verbose:
+        print ("{0}: Arg1 repo_name = {1}".format(func_name, repo_name))
+        print ("{0}: Arg2 tag = {1}".format(func_name, tag))
+
     proc = subprocess.Popen(['docker','images'],stdout=subprocess.PIPE)
     while True:
         line = proc.stdout.readline().rstrip()
         if line != '':
             fields = line.split()
+            if verbose:
+                print ("{0}: Processing {1}". format(func_name, fields))
             if ((fields[0] == repo_name) and (fields[1] == tag)):
+                if verbose:
+                    print ("{0}: Returning image ID {1}".format(func_name, fields[2]))
                 return fields[2]
         else:
             break
-    return None
 
-def options():
+def _options():
+    """
+    Returns program options.
+
+    :return: List of options.
+    """
+
     return [
-        op.make_option("-v", dest="verbose", default=False,
-            help="Enable verbose output.")
+        op.make_option("-v", "--verbose", dest="verbose", default=False,
+                       action="store_true", help="Enable verbose output.")
     ]
 
 def main():
-    parser = op.OptionParser(usage=USAGE, option_list=options())
+    parser = op.OptionParser(usage=USAGE, option_list=_options())
     opts, args = parser.parse_args()
     if len(args) == 0 or len(args) < 3:
 		parser.error("Must have a minumum of 3 arguments")
@@ -41,9 +88,9 @@ def main():
         for arg in args[2:]:
             to_tags.append(arg)
 
-        image_id = get_image_id(repo_name,from_tag)
+        image_id = _get_image_id(repo_name, from_tag, opts.verbose)
         if (image_id != None):
-            promote_id(repo_name,image_id,to_tags)
+            _promote_id(repo_name,image_id, to_tags, opts.verbose)
 
 if __name__ == "__main__":
     main()
