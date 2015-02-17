@@ -4,8 +4,6 @@ FROM centos:centos6
 
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 
-ADD yum.conf /etc/yum/yum.conf
-
 # First install wget so we can install 3rd party repositories
 RUN yum -q -y install wget
 
