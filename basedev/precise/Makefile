@@ -8,7 +8,7 @@ build:
 	docker build --rm=true -t ${REPO_NAME} .
 
 run:
-	docker run -d ${REPO_NAME}
+	docker run --net=host -d ${REPO_NAME}
 
 push:
 	docker push ${REPO_NAME}
