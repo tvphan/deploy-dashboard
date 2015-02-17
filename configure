@@ -78,7 +78,7 @@ def main():
     ctx = {
 		"docker": {
 			"tag" : opts.tag
-		}	
+		}
     }
 
     convert_templates (proj_dir, ctx)

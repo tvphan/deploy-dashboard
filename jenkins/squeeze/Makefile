@@ -10,6 +10,6 @@ build:
 
 run:
 	docker run -d ${REPO_NAME}
-	
+
 push:
 	docker push ${REPO_NAME}

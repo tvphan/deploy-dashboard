@@ -2,7 +2,7 @@
 
 FROM cloudant/basedev-squeeze:{{docker.tag}}
 
-MAINTAINER Cloudant, An IBM Company <support@cloudant.com> 
+MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 # Setup a root password; simple enough to remember, but hard enough that
@@ -49,14 +49,14 @@ RUN chown -R jenkins:jenkins /home/jenkins/.s3cfg
 RUN gpg --keyserver keys.gnupg.net --recv-keys 15BE8E26
 RUN gpg -a --export 15BE8E26 | apt-key add -
 
-USER jenkins 
+USER jenkins
 
 # Create the aptly repos
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
 	-comment="Cloudant Local Private Continuous Integration Repository" \
-	-distribution="squeeze" \ 
-    cloudant-local-private-ci 
+	-distribution="squeeze" \
+    cloudant-local-private-ci
 
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
@@ -71,7 +71,7 @@ RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
 	-comment="Cloudant Local Private Release Repository" \
 	-distribution="squeeze" \
-	cloudant-local-private-release 
+	cloudant-local-private-release
 
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \

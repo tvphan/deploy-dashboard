@@ -1,4 +1,4 @@
-# Dockerfile for base centos development image 
+# Dockerfile for base centos development image
 
 FROM centos:centos6
 
@@ -40,7 +40,7 @@ RUN yum -q -y install \
 	libicu-devel \
     libtool \
     make \
-    ncurses-devel \ 
+    ncurses-devel \
     nspr-devel \
     openssh-server \
     openssl \
@@ -52,8 +52,8 @@ RUN yum -q -y install \
 	python-setuptools \
 	readline-devel \
     redhat-rpm-config \
-    rpmdevtools \ 
-    rpm-build \ 
+    rpmdevtools \
+    rpm-build \
     ruby \
     ruby-devel \
     rubygems \
@@ -77,7 +77,7 @@ RUN cd /tmp \
     && echo "export M2_HOME=/usr/local/apache-maven/apache-maven-3.2.5" > /etc/profile.d/maven.sh \
     && echo "export M2=\$M2_HOME/bin" >> /etc/profile.d/maven.sh \
     && echo "export PATH=\$M2:\$PATH" >> /etc/profile.d/maven.sh \
-    && ln -s /usr/local/apache-maven/apache-maven-3.2.5/bin/mvn /usr/local/bin/mvn 
+    && ln -s /usr/local/apache-maven/apache-maven-3.2.5/bin/mvn /usr/local/bin/mvn
 
 # Install rebar from github
 RUN curl -L https://github.com/rebar/rebar/wiki/rebar > /usr/local/bin/rebar
@@ -92,6 +92,6 @@ RUN pip -q install jinja2 pyyaml
 
 CMD ["/usr/sbin/sshd", "-D"]
 
-# Defer following to child images 
+# Defer following to child images
 ONBUILD EXPOSE 22
-ONBUILD WORKDIR /tmp 
+ONBUILD WORKDIR /tmp

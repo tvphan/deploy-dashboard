@@ -1,7 +1,7 @@
 # Dockerfile for jenkins slave
 
 FROM debian:squeeze
-MAINTAINER Cloudant, An IBM Company <support@cloudant.com> 
+MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /tmp
@@ -9,7 +9,7 @@ WORKDIR /tmp
 # Don't use the frequently broken "smart" mirrors
 RUN sed -i s/http.debian.net/ftp.uk.debian.org/g /etc/apt/sources.list
 
-RUN apt-get -qq update && \ 
+RUN apt-get -qq update && \
     apt-get install -qq -y --no-install-recommends \
 	apt-utils \
     autoconf \
@@ -38,7 +38,7 @@ RUN apt-get -qq update && \
     tar \
     unzip \
     vim \
-    wget 
+    wget
 
 RUN wget -q http://packages.cloudant.com/debian/dists/squeeze/main/binary-amd64/libmozjs185-cloudant_1.8.5-cloudant1_amd64.deb && \
     wget -q http://packages.cloudant.com/debian/dists/squeeze/main/binary-amd64/libmozjs185-cloudant-dev_1.8.5-cloudant1_amd64.deb && \
@@ -66,7 +66,7 @@ RUN mkdir -p /var/run/sshd
 RUN apt-get install -y --no-install-recommends openjdk-6-jdk
 
 # Install fpm
-RUN gem install fpm 
+RUN gem install fpm
 RUN ln -s /var/lib/gems/1.8/bin/fpm /usr/local/bin
 
 # Install rebar from github

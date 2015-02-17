@@ -1,8 +1,8 @@
-# Dockerfile for slave 
+# Dockerfile for slave
 
 FROM cloudant/basedev-precise:{{docker.tag}}
 
-MAINTAINER Cloudant, An IBM Company <support@cloudant.com> 
+MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 # Add user jenkins to the image
@@ -63,7 +63,7 @@ RUN aptly repo create \
 
 RUN aptly publish repo -distribution=precise -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-release cloudant-local-private/release/ubuntu
 RUN aptly publish repo -distribution=precise -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-release cloudant-local-public/release/ubuntu
- 
+
 USER root
 
 # Configure git

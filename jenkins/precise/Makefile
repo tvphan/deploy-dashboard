@@ -8,8 +8,8 @@ clean:
 build:
 	docker build --rm=true -t ${REPO_NAME} .
 
-run: 
+run:
 	docker run -d ${REPO_NAME}
 
 push:
-	docker push ${REPO_NAME} 
+	docker push ${REPO_NAME}

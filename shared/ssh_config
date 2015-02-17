@@ -7,4 +7,4 @@ Host github.com
 Host demo.github.com
    HostName github.com
    IdentityFile ~/.ssh/demo_id_rsa
-   User demo 
+   User demo

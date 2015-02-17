@@ -4,11 +4,11 @@ all: build
 
 clean:
 
-build: 
+build:
 	docker build --rm=true -t ${REPO_NAME} .
 
-run: 
-	docker run -d ${REPO_NAME} 
+run:
+	docker run -d ${REPO_NAME}
 
 publish:
 	docker push ${REPO_NAME}

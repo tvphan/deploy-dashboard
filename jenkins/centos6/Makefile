@@ -1,4 +1,4 @@
-REPO_NAME=cloudant/jenkins-centos6 
+REPO_NAME=cloudant/jenkins-centos6
 
 all: build
 
@@ -12,4 +12,4 @@ run:
 	docker run -d ${REPO_NAME}
 
 push:
-	docker push ${REPO_NAME} 
+	docker push ${REPO_NAME}

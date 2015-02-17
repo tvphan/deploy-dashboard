@@ -80,15 +80,15 @@ RUN cd /tmp \
     && echo "export M2_HOME=/usr/local/apache-maven/apache-maven-3.2.5" > /etc/profile.d/maven.sh \
     && echo "export M2=\$M2_HOME/bin" >> /etc/profile.d/maven.sh \
     && echo "export PATH=\$M2:\$PATH" >> /etc/profile.d/maven.sh \
-    && ln -s /usr/local/apache-maven/apache-maven-3.2.5/bin/mvn /usr/local/bin/mvn 
+    && ln -s /usr/local/apache-maven/apache-maven-3.2.5/bin/mvn /usr/local/bin/mvn
 
 ENV M2_HOME /usr/local/apache-maven/apache-maven-3.2.5
 
 # Set the locale
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8  
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Install rebar from github
 RUN curl -s -L https://github.com/rebar/rebar/wiki/rebar > /usr/local/bin/rebar
@@ -96,7 +96,7 @@ RUN chmod +rx /usr/local/bin/rebar
 
 # Setup a basic SSH server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
-RUN mkdir -p /var/run/sshd 
+RUN mkdir -p /var/run/sshd
 
 # Install fpm
 RUN gem install fpm
