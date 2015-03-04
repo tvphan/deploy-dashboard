@@ -20,7 +20,7 @@ RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-local-public/release
 RUN gpg --keyserver keys.gnupg.net --recv-keys 2A194991
 RUN gpg -a --export 2A194991 | sudo apt-key add -
 RUN apt-get update
-RUN apt-get install aptly
+RUN apt-get -y install aptly
 ADD shared/aptly.conf /home/jenkins/.aptly.conf
 RUN chown jenkins:jenkins /home/jenkins/.aptly.conf
 
