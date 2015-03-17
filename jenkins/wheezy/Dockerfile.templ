@@ -1,6 +1,6 @@
 # Dockerfile for the jenkins debian slave
 
-FROM cloudant/basedev-squeeze:{{docker.tag}}
+FROM cloudant/basedev-wheezy:{{docker.tag}}
 
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 ENV DEBIAN_FRONTEND noninteractive
@@ -29,8 +29,8 @@ RUN chown -R jenkins:jenkins /home/jenkins/.ssh \
 RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Add the aptly & cloudant-local public repository to the list
-RUN echo "deb http://repo.aptly.info/ squeeze main" >> /etc/apt/sources.list
-RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-local-public/release/debian/ squeeze main" >> /etc/apt/sources.list
+RUN echo "deb http://repo.aptly.info/ wheezy main" >> /etc/apt/sources.list
+RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-local-public/release/debian/ wheezy main" >> /etc/apt/sources.list
 
 RUN gpg --keyserver keys.gnupg.net --recv-keys 2A194991
 RUN gpg -a --export 2A194991 | apt-key add -
@@ -54,32 +54,32 @@ USER jenkins
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
 	-comment="Cloudant Local Private Continuous Integration Repository" \
-	-distribution="squeeze" \
+	-distribution="wheezy" \
     cloudant-local-private-ci
 
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
 	-comment="Cloudant Local Public Continuous Integration Repository" \
-	-distribution="squeeze" \
+	-distribution="wheezy" \
     cloudant-local-public-ci
 
-RUN aptly publish repo -distribution=squeeze -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-ci cloudant-local-private/ci/debian
-RUN aptly publish repo -distribution=squeeze -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-ci cloudant-local-public/ci/debian
+RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-ci cloudant-local-private/ci/debian
+RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-ci cloudant-local-public/ci/debian
 
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
 	-comment="Cloudant Local Private Release Repository" \
-	-distribution="squeeze" \
+	-distribution="wheezy" \
 	cloudant-local-private-release
 
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
 	-comment="Cloudant Local Public Release Repository" \
-	-distribution="squeeze" \
+	-distribution="wheezy" \
 	cloudant-local-public-release
 
-RUN aptly publish repo -distribution=squeeze -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-release cloudant-local-private/release/debian
-RUN aptly publish repo -distribution=squeeze -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-release cloudant-local-public/release/debian
+RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-release cloudant-local-private/release/debian
+RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-release cloudant-local-public/release/debian
 
 USER root
 

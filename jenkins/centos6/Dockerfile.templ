@@ -4,6 +4,9 @@ FROM cloudant/basedev-centos6:{{docker.tag}}
 
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 
+# Disable root password
+RUN passwd -l root
+
 ENV USERNAME jenkins
 ENV PASSWORD jenkins
 ENV GROUP jenkins

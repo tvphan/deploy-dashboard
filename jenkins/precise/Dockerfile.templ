@@ -5,6 +5,9 @@ FROM cloudant/basedev-precise:{{docker.tag}}
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 ENV DEBIAN_FRONTEND noninteractive
 
+# Disable root password
+RUN passwd -l root
+
 # Add user jenkins to the image
 RUN adduser --quiet jenkins
 
