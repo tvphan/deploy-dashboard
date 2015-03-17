@@ -1,15 +1,30 @@
 DIRS= centos6 squeeze precise
 
-all: build
+CLEANDIRS = $(DIRS:%=clean-%)
+BUILDDIRS = $(DIRS:%=build-%)
+RUNDIRS   = $(DIRS:%=run-%)
+PUSHDIRS  = $(DIRS:%=push-%)
 
-clean:
-	for d in $(DIRS); do (cd $$d; $(MAKE) clean); done;
+all: $(BUILDDIRS)
+$(DIRS): $(BUILDDIRS)
+$(BUILDDIRS):
+	$(MAKE) -C $(@:build-%=%)
 
-build:
-	for d in $(DIRS); do (cd $$d; $(MAKE) build); done;
+clean: $(CLEANDIRS)
+$(CLEANDIRS):
+	$(MAKE) -C $(@:clean-%=%) clean
 
-run:
-	for d in $(DIRS); do (cd $$d; $(MAKE) run); done;
+run: $(RUNDIRS)
+$(RUNDIRS):
+	$(MAKE) -C $(@:run-%=%) run
 
-push:
-	for d in $(DIRS); do (cd $$d; $(MAKE) push); done;
+push: $(PUSHDIRS)
+$(PUSHDIRS):
+	$(MAKE) -C $(@:push-%=%) push
+
+.PHONY: subdirs $(DIRS)
+.PHONY: subdirs $(CLEANDIRS)
+.PHONY: subdirs $(BUILDDIRS)
+.PHONY: subdirs $(RUNDIRS)
+.PHONY: subdirs $(PUSHDIRS)
+.PHONY: all clean run push
