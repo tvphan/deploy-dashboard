@@ -16,14 +16,14 @@ cd ~
 git clone git@github.com:cloudant/docker-images
 ```
 
-1) Install python dependencies in your virtualenv:
+2) Install python dependencies in your virtualenv:
 ```bash
 pip install -r requirements.txt
 ```
 
-1) Get the docker-images config file. This is stored in lastpass, under the secure note called "docker-images". Copy and paste the contents of the config file to `~/.docker-images`.
+3) Get the docker-images config file. This is stored in lastpass, under the secure note called "docker-images". Copy and paste the contents of the config file to `~/.docker-images`.
 
-2) Modify the following files under the [shared](shared) folder.
+4) Modify the following files under the [shared](shared) folder.
 
 * s3cfg
 
