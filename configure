@@ -35,10 +35,10 @@ def setup_deps():
     if os.path.isfile(fname) and os.access(fname, os.R_OK):
         copyanything(fname,"shared/s3cfg")
 
-    copyanything("shared","jenkins/centos6/shared")
-    copyanything("shared","jenkins/squeeze/shared")
-    copyanything("shared","jenkins/precise/shared")
-    copyanything("shared","jenkins/wheezy/shared")
+    copyanything("shared","jenkins-dev/centos6/shared")
+    copyanything("shared","jenkins-dev/squeeze/shared")
+    copyanything("shared","jenkins-dev/precise/shared")
+    copyanything("shared","jenkins-dev/wheezy/shared")
 
 def convert_templates (proj_dir, ctx):
     for path, dnames, fnames in os.walk(proj_dir):
