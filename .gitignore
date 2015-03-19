@@ -1,11 +1,5 @@
-basedev/centos6/shared
-basedev/squeeze/shared
-basedev/precise/shared
+shared/id_rsa
+basedev/*/shared
 
-jenkins/centos6/shared
-jenkins/squeeze/shared
-jenkins/precise/shared
-
-jenkins/centos6/Dockerfile
-jenkins/squeeze/Dockerfile
-jenkins/precise/Dockerfile
+jenkins*/*/shared
+jenkins*/*/Dockerfile
