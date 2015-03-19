@@ -38,6 +38,7 @@ def setup_deps():
     copyanything("shared","jenkins/centos6/shared")
     copyanything("shared","jenkins/squeeze/shared")
     copyanything("shared","jenkins/precise/shared")
+    copyanything("shared","jenkins/wheezy/shared")
 
 def convert_templates (proj_dir, ctx):
     for path, dnames, fnames in os.walk(proj_dir):
