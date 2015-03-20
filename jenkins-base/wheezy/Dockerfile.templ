@@ -40,6 +40,7 @@ RUN gpg --keyserver keys.gnupg.net --recv-keys 15BE8E26
 RUN gpg -a --export 15BE8E26 | apt-key add -
 
 USER jenkins
+WORKDIR /home/jenkins
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
