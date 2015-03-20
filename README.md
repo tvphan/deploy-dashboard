@@ -3,8 +3,10 @@ docker-images
 
 Docker files for development, test and production use. The docker files are grouped into the following categories
 
-* basedev - Base development dockerfiles.
-* jenkins - Jenkins specific dockerfiles.
+* base - Base dockerfiles. Just common and very basic packages.
+* jenkins-base - Jenkins basic dockerfiles including SSH + 'jenkins' user configuration.
+* base-local - Base development dockerfiles for Cloudant Local.
+* jenkins-local - Jenkins specific dockerfiles for Cloudant Local.
 
 
 Getting Started

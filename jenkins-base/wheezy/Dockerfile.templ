@@ -1,0 +1,45 @@
+# Dockerfile for the jenkins debian slave
+
+FROM cloudant/base-wheezy:{{docker.tag}}
+
+MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
+ENV DEBIAN_FRONTEND noninteractive
+
+# Disable root password
+RUN passwd -l root
+
+# Add user jenkins to the image
+RUN adduser --quiet jenkins
+
+# Set password for the jenkins user (you may want to alter this).
+RUN echo "jenkins:jenkins" | chpasswd
+
+# Configure git
+ADD shared/gitconfig /home/jenkins/.gitconfig
+RUN chown jenkins:jenkins /home/jenkins/.gitconfig
+
+# Install and configure ssh
+RUN sudo apt-get install -qq -y openssh-server
+RUN mkdir -p /home/jenkins/.ssh
+ADD shared/id_rsa /home/jenkins/.ssh/id_rsa
+ADD shared/ssh_config /home/jenkins/.ssh/config
+RUN chown -R jenkins:jenkins /home/jenkins/.ssh \
+	&& chmod -R og-rwx /home/jenkins/.ssh
+
+# Grant the user sudo privileges
+RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+RUN gpg --keyserver keys.gnupg.net --recv-keys 2A194991
+RUN gpg -a --export 2A194991 | apt-key add -
+
+# Setup AWS s3cmd tool
+ADD shared/s3cfg /home/jenkins/.s3cfg
+RUN chown -R jenkins:jenkins /home/jenkins/.s3cfg
+
+RUN gpg --keyserver keys.gnupg.net --recv-keys 15BE8E26
+RUN gpg -a --export 15BE8E26 | apt-key add -
+
+USER jenkins
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]

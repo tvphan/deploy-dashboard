@@ -14,7 +14,7 @@ def _promote_id(repo_name, image_id, tags, verbose=False):
     """
     Promotes a docker image using a release tag (Ex. latest, 1.0.0, etc.)
 
-    :param repo_name: Name of the docker repository to promote (Ex. cloudant/basedev-centos6).
+    :param repo_name: Name of the docker repository to promote (Ex. cloudant/base-local-centos6).
     :param image_id: The docker image ID to be promoted.
     :param tags: The docker tag to apply (Ex. latest, 1.0.0, etc.).
     :param verbose: If True, generates additional output (Default: False)
@@ -38,7 +38,7 @@ def _get_image_id(repo_name, tag, verbose=False):
     """
     Returns the docker image ID of a particular repository/tag.
 
-    :param repo_name: The docker repository name (Ex. cloudant/basedev-centos6)
+    :param repo_name: The docker repository name (Ex. cloudant/base-local-centos6)
     :param tag: The docker tag of the image to retrieve (Ex. 1, 2, 3, etc.)
     :param verbose: If True, generates additional output (Default: False)
 
