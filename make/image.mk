@@ -1,9 +1,9 @@
 all: build
 
-clean:
-	rm -rf shared
+clean::
+	$(RM) -r shared
 
-build:
+build: Dockerfile
 	docker build  --rm=true -t ${REPO_NAME} .
 
 run:
@@ -11,3 +11,7 @@ run:
 
 push:
 	docker push ${REPO_NAME}
+
+PRJ_DIR = $(abspath ../..)
+Dockerfile:
+	cd $(PRJ_DIR) && $(PRJ_DIR)/configure
