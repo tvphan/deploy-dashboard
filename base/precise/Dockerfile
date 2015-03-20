@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq update && \
     apt-get install -qq -y --no-install-recommends \
+    adduser \
     autoconf \
     automake \
     build-essential \

@@ -1,7 +1,7 @@
-DIRS = base jenkins-base base-dev jenkins-dev
+DIRS = base jenkins-base base-local jenkins-local
 
 include make/subdirs.mk
 
 jenkins-base: base jenkins-base
 
-jenkins-dev: base base-dev
+jenkins-local: base base-local

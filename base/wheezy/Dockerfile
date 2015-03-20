@@ -9,6 +9,7 @@ RUN sed -i s/http.debian.net/ftp.uk.debian.org/g /etc/apt/sources.list
 
 RUN apt-get -qq update && \
     apt-get install -qq -y --no-install-recommends \
+    adduser \
     autoconf \
     automake \
     build-essential \

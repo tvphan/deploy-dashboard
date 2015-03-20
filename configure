@@ -35,7 +35,7 @@ def setup_deps():
     if os.path.isfile(fname) and os.access(fname, os.R_OK):
         copyanything(fname,"shared/s3cfg")
 
-    jenkins_images_dirs = ['jenkins-base', 'jenkins-dev']
+    jenkins_images_dirs = ['jenkins-base', 'jenkins-local']
     for i in jenkins_images_dirs:
         _, dirs, _ = os.walk(i).next()
         for j in dirs:
