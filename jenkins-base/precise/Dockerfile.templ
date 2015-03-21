@@ -42,6 +42,9 @@ RUN gpg -a --export 2A194991 | apt-key add -
 RUN gpg --keyserver keys.gnupg.net --recv-keys 15BE8E26
 RUN gpg -a --export 15BE8E26 | apt-key add -
 
+# Install java (needed for Jenkins slave)
+RUN apt-get install -qq -y default-jre
+
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 RUN mkdir /var/run/sshd
