@@ -27,4 +27,5 @@ RUN apt-get -qq update && \
     unzip \
     vim \
     wget \
-    less
+    less \
+    lsb-release
