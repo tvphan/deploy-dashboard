@@ -37,10 +37,11 @@ RUN sudo chown -R jenkins:jenkins /home/jenkins/.s3cfg
 
 USER root
 
-RUN gpg --keyserver keys.gnupg.net --recv-keys 2A194991
-RUN gpg -a --export 2A194991 | apt-key add -
-RUN gpg --keyserver keys.gnupg.net --recv-keys 15BE8E26
-RUN gpg -a --export 15BE8E26 | apt-key add -
+RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-public-apt-repo-debian squeeze main" >> /etc/apt/sources.list
+RUN wget -qO - http://s3.amazonaws.com/cloudant-public-apt-repo-debian/cloudant-apt-pub.key | apt-key add -
+RUN apt-get update
+
+RUN apt-get -y install apt-transport-s3
 
 # Install java (needed for Jenkins slave)
 RUN apt-get install -qq -y default-jre
