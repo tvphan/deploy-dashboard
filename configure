@@ -13,7 +13,7 @@ import platform
 USAGE = "%prog [OPTIONS]"
 
 OS = {
-    'centos6': ('cento6', 'centos6'),
+    'centos6': ('centos', 'centos6'),
     'lucid': ('ubuntu', '10.04'),
     'precise': ('ubuntu', '12.04'),
     'trusty': ('ubuntu', '14.04'),
@@ -45,12 +45,26 @@ def setup_deps():
     if os.path.isfile(fname) and os.access(fname, os.R_OK):
         copyanything(fname,"shared/s3cfg")
 
+    apt = "/etc/apt/sources.list.d/cloudant-private-apt-repo-source.list"
+    if os.path.isfile(apt) and os.access(apt, os.R_OK):
+        cmd = "cat " + apt + " | awk -F'@s3' '{print $1}' | awk '{print $2}' | cut -c 6-"
+        with open('shared/s3keys', 'w') as f:
+            _, _ = sp.Popen(cmd, stdout=f, shell=True).communicate()
+
     jenkins_images_dirs = ['jenkins-base', 'jenkins-local']
     for i in jenkins_images_dirs:
         _, dirs, _ = os.walk(i).next()
         for j in dirs:
-            copyanything("shared", os.path.join(i, j, "shared"))
+            cur = os.path.join(i, j, "shared")
+            copyanything("shared", cur)
 
+            # Generate private apt repo source file if required
+            if j not in OS.keys() or OS[j][0] not in ['debian', 'ubuntu']:
+                continue
+
+            f = open(os.path.join(cur, 'cloudant-private-apt-repo-source.list'), 'w')
+            f.write('deb s3://{}@s3.amazonaws.com/cloudant-private-apt-repo-{} {} main\n'.format(
+                    open("shared/s3keys", 'r').read().strip(), OS[j][0], j))
 
 def convert_templates (proj_dir, ctx):
     for path, dnames, fnames in os.walk(proj_dir):
