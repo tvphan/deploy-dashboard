@@ -12,6 +12,16 @@ import platform
 
 USAGE = "%prog [OPTIONS]"
 
+OS = {
+    'centos6': ('cento6', 'centos6'),
+    'lucid': ('ubuntu', '10.04'),
+    'precise': ('ubuntu', '12.04'),
+    'trusty': ('ubuntu', '14.04'),
+    'squeeze': ('debian', '6.0'),
+    'wheezy': ('debian', '7.0'),
+    'jessie': ('debian', '8.0'),
+}
+
 def copyanything(src, dst):
     if os.path.isdir(dst):
         shutil.rmtree(dst)
@@ -51,6 +61,10 @@ def convert_templates (proj_dir, ctx):
             with open(os.path.join(path,fname), "r") as handle:
                 data = handle.read()
 
+            codename = os.path.basename(path)
+            ctx['os_codename'] = codename
+            ctx['os_brand'], ctx['os_version'] = OS[codename]
+
             data = jinja2.Template(data, trim_blocks=True, lstrip_blocks=True).render(**ctx)
 
             new_fname = os.path.join(path,fname).rsplit(".",1)[0]
@@ -70,18 +84,18 @@ def main():
     opts, args = parser.parse_args()
 
     if len(args) == 0:
-		proj_dir = os.path.dirname(__file__)
+        proj_dir = os.path.dirname(__file__)
     elif len(args) == 1:
-       proj_dir = args[0]
+        proj_dir = args[0]
     else:
         parser.error("Unknown arguments: " + ", ".join(args[1:]))
 
     setup_deps()
 
     ctx = {
-		"docker": {
-			"tag" : opts.tag
-		}
+    "docker": {
+        "tag" : opts.tag
+        }
     }
 
     convert_templates (proj_dir, ctx)
