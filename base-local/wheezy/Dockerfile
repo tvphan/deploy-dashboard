@@ -6,8 +6,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /tmp
 
-# Don't use the frequently broken "smart" mirrors
-RUN sed -i s/http.debian.net/ftp.uk.debian.org/g /etc/apt/sources.list
+# Use httpredir
+RUN sed -i s/http.debian.net/httpredir.debian.org/g /etc/apt/sources.list
 
 RUN apt-get -qq update && \
     apt-get install -qq -y --no-install-recommends \
