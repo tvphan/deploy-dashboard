@@ -74,10 +74,10 @@ def convert_templates (proj_dir, ctx):
 
             with open(os.path.join(path,fname), "r") as handle:
                 data = handle.read()
-
             codename = os.path.basename(path)
-            ctx['os_codename'] = codename
-            ctx['os_brand'], ctx['os_version'] = OS[codename]
+            if codename in OS.keys(): 
+                ctx['os_codename'] = codename
+                ctx['os_brand'], ctx['os_version'] = OS[codename]
 
             data = jinja2.Template(data, trim_blocks=True, lstrip_blocks=True).render(**ctx)
 

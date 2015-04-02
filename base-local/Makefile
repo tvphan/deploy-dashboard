@@ -1,2 +1,2 @@
-DIRS = centos6 squeeze precise wheezy
+DIRS = centos6 squeeze precise
 include ../make/subdirs.mk

@@ -1,0 +1,82 @@
+# Dockerfile for InstallAnywhere
+
+FROM ubuntu:14.04 
+
+MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
+ENV DEBIAN_FRONTEND noninteractive
+
+ENV USERNAME jenkins 
+ENV PASSWORD jenkins 
+ENV GROUP ${USERNAME} 
+ENV HOME /home/cloudant
+
+RUN apt-get -qq update && \
+	apt-get -qq install -y \
+	git \
+	mkisofs \
+	net-tools \
+	openjdk-6-jdk \
+	update-manager-core \
+	s3cmd \
+	ssh \
+	wget
+
+# Add the default user to the image
+RUN adduser --quiet --home $HOME $USERNAME 
+
+# Set password for the user (you may want to alter this).
+RUN echo "${USERNAME}:${GROUP}" | chpasswd
+RUN chown -R ${USERNAME}:${GROUP} ${HOME} 
+
+# Setup AWS s3cmd tool
+ADD shared/s3cfg ${HOME}/.s3cfg
+RUN chown -R ${USERNAME}:${GROUP} ${HOME}/.s3cfg
+
+# Pull down the InstallAnywhere installer
+RUN cd /tmp && \
+    s3cmd get s3://cloudant-local/installAnywhere/installer.bin && \
+    s3cmd get s3://cloudant-local/installAnywhere/installer.properties && \
+    chmod +x installer.bin
+
+# Install InstallAnywhere
+RUN cd /tmp && \
+	./installer.bin -i silent
+
+# Add the IBM plugins
+RUN mkdir -p /opt/ia2013/plugins && \
+    cd /opt/ia2013/plugins && \
+    s3cmd get s3://cloudant-local/installAnywhere/plugins/IsRoot.zip && \
+    s3cmd get s3://cloudant-local/installAnywhere/plugins/LAConsole_IA.jar && \
+    s3cmd get s3://cloudant-local/installAnywhere/plugins/LAFiles_IA.jar && \
+    s3cmd get s3://cloudant-local/installAnywhere/plugins/LAPanel_IA.jar && \
+    s3cmd get s3://cloudant-local/installAnywhere/plugins/LARule_IA.jar && \
+	chmod 775 *
+
+# Add the IBM installer VM
+RUN cd /opt/ia2013/resource/installer_vms && \
+	s3cmd get s3://cloudant-local/installAnywhere/resource/installer_vms/IA_ibm_linux86_64_16_SR9.vm && \
+	chmod 775 *
+
+# Change the ownership of the installAnywhere directory
+RUN chown -R ${USERNAME}:${GROUP} /opt/ia2013
+
+# Configure git
+ADD shared/gitconfig ${HOME}/.gitconfig
+RUN chown ${USERNAME}:${GROUP} ${HOME}/.gitconfig
+
+# Setup a basic SSH server
+RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
+RUN mkdir -p /var/run/sshd
+
+# Configure ssh
+RUN mkdir -p ${HOME}/.ssh
+ADD shared/id_rsa ${HOME}/.ssh/id_rsa
+ADD shared/ssh_config ${HOME}/.ssh/config
+RUN chown -R ${USERNAME}:${GROUP} ${HOME}/.ssh \
+	&& chmod -R og-rwx ${HOME}/.ssh
+
+# Grant the user sudo privileges
+RUN echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
