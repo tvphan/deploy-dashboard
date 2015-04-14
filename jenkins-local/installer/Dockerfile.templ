@@ -35,8 +35,8 @@ RUN chown -R ${USERNAME}:${GROUP} ${HOME}/.s3cfg
 
 # Pull down the InstallAnywhere installer
 RUN cd /tmp && \
-    s3cmd get s3://cloudant-local/installAnywhere/installer.bin && \
-    s3cmd get s3://cloudant-local/installAnywhere/installer.properties && \
+    s3cmd get s3://cloudant-local-installer/installAnywhere/installer.bin && \
+    s3cmd get s3://cloudant-local-installer/installAnywhere/installer.properties && \
     chmod +x installer.bin
 
 # Install InstallAnywhere
@@ -46,16 +46,16 @@ RUN cd /tmp && \
 # Add the IBM plugins
 RUN mkdir -p /opt/ia2013/plugins && \
     cd /opt/ia2013/plugins && \
-    s3cmd get s3://cloudant-local/installAnywhere/plugins/IsRoot.zip && \
-    s3cmd get s3://cloudant-local/installAnywhere/plugins/LAConsole_IA.jar && \
-    s3cmd get s3://cloudant-local/installAnywhere/plugins/LAFiles_IA.jar && \
-    s3cmd get s3://cloudant-local/installAnywhere/plugins/LAPanel_IA.jar && \
-    s3cmd get s3://cloudant-local/installAnywhere/plugins/LARule_IA.jar && \
+    s3cmd get s3://cloudant-local-installer/installAnywhere/plugins/IsRoot.zip && \
+    s3cmd get s3://cloudant-local-installer/installAnywhere/plugins/LAConsole_IA.jar && \
+    s3cmd get s3://cloudant-local-installer/installAnywhere/plugins/LAFiles_IA.jar && \
+    s3cmd get s3://cloudant-local-installer/installAnywhere/plugins/LAPanel_IA.jar && \
+    s3cmd get s3://cloudant-local-installer/installAnywhere/plugins/LARule_IA.jar && \
 	chmod 775 *
 
 # Add the IBM installer VM
 RUN cd /opt/ia2013/resource/installer_vms && \
-	s3cmd get s3://cloudant-local/installAnywhere/resource/installer_vms/IA_ibm_linux86_64_16_SR9.vm && \
+	s3cmd get s3://cloudant-local-installer/installAnywhere/resource/installer_vms/IA_ibm_linux86_64_16_SR9.vm && \
 	chmod 775 *
 
 # Change the ownership of the installAnywhere directory
