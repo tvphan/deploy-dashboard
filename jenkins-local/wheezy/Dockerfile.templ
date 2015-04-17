@@ -28,9 +28,9 @@ RUN chown -R jenkins:jenkins /home/jenkins/.ssh \
 # Grant the user sudo privileges
 RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Add the aptly & cloudant-local public repository to the list
+# Add the aptly & cloudant-local-extdeps repository to the list
 RUN echo "deb http://repo.aptly.info/ wheezy main" >> /etc/apt/sources.list
-RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-local-public/release/debian/ wheezy main" >> /etc/apt/sources.list
+RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-local-extdeps/releases/debian/latest wheezy main" >> /etc/apt/sources.list
 
 RUN gpg --keyserver keys.gnupg.net --recv-keys 2A194991
 RUN gpg -a --export 2A194991 | apt-key add -
@@ -53,33 +53,18 @@ USER jenkins
 # Create the aptly repos
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
-	-comment="Cloudant Local Private Continuous Integration Repository" \
+	-comment="Cloudant Local External Dependencies" \
 	-distribution="wheezy" \
-    cloudant-local-private-ci
+    cloudant-local-extdeps
 
 RUN aptly repo create \
 	-config="/home/jenkins/.aptly.conf" \
-	-comment="Cloudant Local Public Continuous Integration Repository" \
+	-comment="Cloudant Local Services" \
 	-distribution="wheezy" \
-    cloudant-local-public-ci
+    cloudant-local-services
 
-RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-ci cloudant-local-private/ci/debian
-RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-ci cloudant-local-public/ci/debian
-
-RUN aptly repo create \
-	-config="/home/jenkins/.aptly.conf" \
-	-comment="Cloudant Local Private Release Repository" \
-	-distribution="wheezy" \
-	cloudant-local-private-release
-
-RUN aptly repo create \
-	-config="/home/jenkins/.aptly.conf" \
-	-comment="Cloudant Local Public Release Repository" \
-	-distribution="wheezy" \
-	cloudant-local-public-release
-
-RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-private-release cloudant-local-private/release/debian
-RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-public-release cloudant-local-public/release/debian
+RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-extdeps cloudant-local-extdeps/debian
+RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/home/jenkins/.aptly.conf" cloudant-local-services cloudant-local-services/debian
 
 USER root
 

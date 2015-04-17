@@ -12,9 +12,9 @@ ENV PASSWORD jenkins
 ENV GROUP jenkins
 ENV HOME /home/jenkins
 
-# Enable the Cloudant Local Repository
+# Enable the Cloudant Local External Dependencies Repository 
 RUN cd /etc/yum.repos.d \
-   && wget http://s3.amazonaws.com/cloudant-local/redhat/cloudant-local-public.repo
+   && wget http://s3.amazonaws.com/cloudant-local/redhat/cloudant-local-extdeps.repo
 
 # Set up a user for builds
 RUN adduser -d $HOME jenkins

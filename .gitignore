@@ -1,5 +1,6 @@
 shared/id_rsa
 base*/*/shared
+base*/*/Dockerfile
 
 jenkins*/*/shared
 jenkins*/*/Dockerfile
