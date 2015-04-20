@@ -10,7 +10,7 @@ WORKDIR /tmp
 RUN sed -i s/http.debian.net/httpredir.debian.org/g /etc/apt/sources.list
 
 RUN apt-get -qq update && \
-    apt-get install -qq -y --no-install-recommends \
+    apt-get install -qq -y --force-yes --no-install-recommends \
 	apt-utils \
     autoconf \
     automake \
@@ -58,12 +58,12 @@ RUN wget -q http://www.erlang.org/download/otp_src_17.1.tar.gz && \
 RUN pip install -q jinja2 pyyaml
 
 # Install a basic SSH server
-RUN apt-get install -y openssh-server
+RUN apt-get install -y --force-yes openssh-server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
 
 # Install JDK
-RUN apt-get install -y --no-install-recommends openjdk-6-jdk
+RUN apt-get install -y --force-yes --no-install-recommends openjdk-6-jdk
 
 # Install fpm
 RUN gem install fpm

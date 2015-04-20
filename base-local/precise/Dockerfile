@@ -6,15 +6,15 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Install erlang from external repo
 RUN apt-get -qq update \
-    && apt-get -qq install -y apt-utils \
-    && apt-get -qq install -y wget ca-certificates \
+    && apt-get -qq install -y --force-yes apt-utils \
+    && apt-get -qq install -y --force-yes wget ca-certificates \
     && wget http://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb \
     && dpkg -i erlang-solutions_1.0_all.deb \
     && rm erlang-solutions_1.0_all.deb \
     && apt-get -qq update
 
 ENV ERLANG_VERSION 1:17.1
-RUN apt-get install -y \
+RUN apt-get install -y --force-yes \
     erlang-base=$ERLANG_VERSION \
     erlang-asn1=$ERLANG_VERSION \
     erlang-crypto=$ERLANG_VERSION \
@@ -36,7 +36,7 @@ RUN apt-get install -y \
     erlang-webtool=$ERLANG_VERSION
 
 # Install build prereqs from standard repo
-RUN apt-get -qq install -y --no-install-recommends \
+RUN apt-get -qq install -y --force-yes --no-install-recommends \
     build-essential \
     curl \
     libtool \
