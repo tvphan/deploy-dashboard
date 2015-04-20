@@ -24,7 +24,7 @@ ADD shared/gitconfig /home/jenkins/.gitconfig
 RUN sudo chown jenkins:jenkins /home/jenkins/.gitconfig
 
 # Install and configure ssh
-RUN sudo apt-get install -qq -y openssh-server
+RUN sudo apt-get install -qq -y --force-yes openssh-server
 RUN mkdir -p /home/jenkins/.ssh
 ADD shared/id_rsa /home/jenkins/.ssh/id_rsa
 ADD shared/ssh_config /home/jenkins/.ssh/config
@@ -40,14 +40,14 @@ USER root
 RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-public-apt-repo-{{os_brand}} {{os_codename}} main" >> /etc/apt/sources.list
 RUN wget -qO - http://s3.amazonaws.com/cloudant-public-apt-repo-{{os_brand}}/cloudant-apt-pub.key | apt-key add -
 RUN apt-get update
-RUN apt-get -y install apt-transport-s3
+RUN apt-get -y --force-yes install apt-transport-s3
 
 ADD shared/cloudant-private-apt-repo-source.list /etc/apt/sources.list.d/cloudant-private-apt-repo-source.list
 RUN chmod 644 /etc/apt/sources.list.d/cloudant-private-apt-repo-source.list
 RUN apt-get update
 
 # Install java (needed for Jenkins slave)
-RUN apt-get install -qq -y default-jre
+RUN apt-get install -qq -y --force-yes default-jre
 
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
