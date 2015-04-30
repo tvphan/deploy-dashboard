@@ -4,10 +4,10 @@ clean::
 	$(RM) -r shared
 
 build: Dockerfile
-	docker build  --rm=true -t ${REPO_NAME} .
+	docker build --rm=true -t ${REPO_NAME} .
 
 run:
-	docker run -d ${REPO_NAME}
+	docker run ${DOCKER_RUN_OPTS} -d ${REPO_NAME}
 
 push:
 	docker push ${REPO_NAME}

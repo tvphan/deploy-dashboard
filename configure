@@ -35,6 +35,11 @@ def copyanything(src, dst):
             shutil.copy(src, dst)
         else: raise
 
+def setup_dirs():
+    for o in OS.keys():
+        cmd = 'mkdir -p {}'.format(os.path.join('/srv/builds', o))
+        sp.Popen(cmd, shell=True).communicate()
+
 def setup_deps():
     home = os.path.expanduser("~")
     fname = os.path.join(home,".ssh/id_rsa")
@@ -49,7 +54,7 @@ def setup_deps():
     if os.path.isfile(apt) and os.access(apt, os.R_OK):
         cmd = "cat " + apt + " | awk -F'@s3' '{print $1}' | awk '{print $2}' | cut -c 6-"
         with open('shared/s3keys', 'w') as f:
-            _, _ = sp.Popen(cmd, stdout=f, shell=True).communicate()
+            sp.Popen(cmd, stdout=f, shell=True).communicate()
 
     jenkins_images_dirs = ['jenkins-base', 'jenkins-local']
     for i in jenkins_images_dirs:
@@ -104,6 +109,7 @@ def main():
     else:
         parser.error("Unknown arguments: " + ", ".join(args[1:]))
 
+    setup_dirs()
     setup_deps()
 
     ctx = {
