@@ -30,7 +30,8 @@ RUN apt-get -qq update && \
     wget \
     less \
     libncurses5-dev \
-    lsb-release
+    lsb-release \
+    libssl-dev
 
 # Install kerl
 RUN curl -o /usr/local/bin/kerl https://raw.githubusercontent.com/spawngrid/kerl/master/kerl
