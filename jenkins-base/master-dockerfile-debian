@@ -37,7 +37,8 @@ RUN sudo chown -R jenkins:jenkins /home/jenkins/.s3cfg
 
 USER root
 
-# Fix permissions in /builds
+# Create /builds
+RUN mkdir /builds
 RUN chown jenkins:jenkins -R /builds
 
 # Configure public apt repository
