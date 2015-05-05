@@ -45,13 +45,11 @@ RUN chown jenkins:jenkins -R /builds
 RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-public-apt-repo-{{os_brand}} {{os_codename}} main" >> /etc/apt/sources.list
 RUN wget -qO - http://s3.amazonaws.com/cloudant-public-apt-repo-{{os_brand}}/cloudant-apt-pub.key | apt-key add -
 RUN apt-get update
-RUN apt-get -y --force-yes install apt-transport-s3
 
-# Intall apt-transport-s3 for private repository
-RUN apt-get -y install apt-transport-s3
-ADD shared/cloudant-private-apt-repo-source.list /etc/apt/sources.list.d/cloudant-private-apt-repo-source.list
-RUN chmod 644 /etc/apt/sources.list.d/cloudant-private-apt-repo-source.list
-RUN apt-get update
+# Do NOT intall apt-transport-s3. Just configure private repository.
+# Leave in /tmp for being used by other jobs.
+ADD shared/cloudant-private-apt-repo-source.list /tmp/cloudant-private-apt-repo-source.list
+RUN chmod 644 /tmp/cloudant-private-apt-repo-source.list
 
 # Install java (needed for Jenkins slave)
 RUN apt-get install -qq -y --force-yes default-jre
