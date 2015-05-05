@@ -40,6 +40,10 @@ RUN apt-get -qq update && \
     vim \
     wget
 
+# Install libicu-42
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu42_4.2.1-3_amd64.deb
+RUN dpkg -i libicu42_4.2.1-3_amd64.deb
+
 RUN wget -q http://packages.cloudant.com/debian/dists/squeeze/main/binary-amd64/libmozjs185-cloudant_1.8.5-cloudant1_amd64.deb && \
     wget -q http://packages.cloudant.com/debian/dists/squeeze/main/binary-amd64/libmozjs185-cloudant-dev_1.8.5-cloudant1_amd64.deb && \
     dpkg -i -R /tmp/libmozjs185*
