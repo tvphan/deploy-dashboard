@@ -8,7 +8,8 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV USERNAME jenkins 
 ENV PASSWORD jenkins 
 ENV GROUP ${USERNAME} 
-ENV HOME /home/cloudant
+ENV HOME /home/${USERNAME}
+ENV IA_HOME ${HOME}/ia2014
 
 RUN apt-get -qq update && \
 	apt-get -qq install -y \
@@ -44,8 +45,8 @@ RUN cd /tmp && \
 	./installer.bin -i silent
 
 # Add the IBM plugins
-RUN mkdir -p /opt/ia2013/plugins && \
-    cd /opt/ia2013/plugins && \
+RUN mkdir -p ${IA_HOME}/plugins && \
+    cd ${IA_HOME}/plugins && \
     s3cmd get s3://cloudant-local-installer/installAnywhere/plugins/IsRoot.zip && \
     s3cmd get s3://cloudant-local-installer/installAnywhere/plugins/LAConsole_IA.jar && \
     s3cmd get s3://cloudant-local-installer/installAnywhere/plugins/LAFiles_IA.jar && \
@@ -54,12 +55,19 @@ RUN mkdir -p /opt/ia2013/plugins && \
 	chmod 775 *
 
 # Add the IBM installer VM
-RUN cd /opt/ia2013/resource/installer_vms && \
+RUN cd ${IA_HOME}/resource/installer_vms && \
 	s3cmd get s3://cloudant-local-installer/installAnywhere/resource/installer_vms/IA_ibm_linux_x86_64_71_SR2_FP10.vm && \
 	chmod 775 *
 
+# Install/Register the IA license
+RUN mkdir ${IA_HOME}/MyLicenses && \
+    cd ${IA_HOME}/MyLicenses && \
+    s3cmd get s3://cloudant-local-installer/installAnywhere/cloudant.lic && \
+    cd ${IA_HOME} && \
+    ./build -registerNodeLocked ${IA_HOME}/MyLicenses/cloudant.lic
+
 # Change the ownership of the installAnywhere directory
-RUN chown -R ${USERNAME}:${GROUP} /opt/ia2013
+RUN chown -R ${USERNAME}:${GROUP} ${IA_HOME} 
 
 # Configure git
 ADD shared/gitconfig ${HOME}/.gitconfig
