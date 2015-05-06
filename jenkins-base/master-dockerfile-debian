@@ -16,6 +16,10 @@ RUN echo "jenkins:jenkins" | chpasswd
 # Grant the user sudo privileges
 RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+# Ensure that jenkins' HOME variable is not kept while sudo.
+# This avoids conflitcs using sudo in Debian and Ubuntu.
+RUN echo "Defaults:jenkins env_keep-=HOME" >> /etc/sudoers
+
 USER jenkins
 WORKDIR /home/jenkins
 
