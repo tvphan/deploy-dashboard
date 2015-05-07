@@ -22,6 +22,7 @@ RUN apt-get -qq update && \
     libtool \
     libz-dev \
 	libnspr4-dev \
+	libnspr4-0d \
 	libicu-dev \
 	libpcre3 \
 	libpcre3-dev \
@@ -30,7 +31,7 @@ RUN apt-get -qq update && \
 	python-pip \
 	python-setuptools \
 	rsync \
-	ruby-dev \
+	ruby1.8-dev \
 	rubygems \
 	s3cmd \
 	subversion \
@@ -39,6 +40,10 @@ RUN apt-get -qq update && \
     unzip \
     vim \
     wget
+
+# Install libicu-42
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu42_4.2.1-3_amd64.deb
+RUN dpkg -i libicu42_4.2.1-3_amd64.deb
 
 RUN wget -q http://packages.cloudant.com/debian/dists/wheezy/main/binary-amd64/libmozjs185-cloudant_1.8.5-cloudant1_amd64.deb && \
     wget -q http://packages.cloudant.com/debian/dists/wheezy/main/binary-amd64/libmozjs185-cloudant-dev_1.8.5-cloudant1_amd64.deb && \
@@ -67,7 +72,6 @@ RUN apt-get install -y --force-yes --no-install-recommends openjdk-6-jdk
 
 # Install fpm
 RUN gem install fpm
-RUN ln -s /var/lib/gems/1.8/bin/fpm /usr/local/bin
 
 # Install rebar from github
 RUN curl -L https://github.com/rebar/rebar/wiki/rebar > /usr/local/bin/rebar \
