@@ -37,7 +37,7 @@ RUN apt-get -qq update && \
 RUN curl -o /usr/local/bin/kerl https://raw.githubusercontent.com/spawngrid/kerl/master/kerl
 RUN chmod +x /usr/local/bin/kerl
 
-$ Build erlang releases
+# Build erlang releases
 ENV CFLAGS -D_FORTIFY_SOURCE=0
 RUN mkdir -p /opt/builds
 
