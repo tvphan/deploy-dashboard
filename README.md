@@ -8,6 +8,9 @@ Docker files for development, test and production use. The docker files are grou
 * base-local - Base development dockerfiles for Cloudant Local.
 * jenkins-local - Jenkins specific dockerfiles for Cloudant Local.
 
+NOTE: Extra steps have been added for building the Cloudant Local packages and
+	  installer on the cloudubu64dk VM (managed by Rob Silvagni). These extra 
+	  steps will be marked as "** Only Required for Cloudubu64dk **"
 
 Getting Started
 ===============
@@ -23,21 +26,58 @@ git clone git@github.com:cloudant/docker-images
 pip install -r requirements.txt
 ```
 
-3) Get the docker-images config file. This is stored in lastpass, under the secure note called "docker-images". Copy and paste the contents of the config file to `~/.docker-images`.
+3) ** Only Required for Cloudubu64dk **
+Add the following lines to the file ~/docker-images/configure in 
+setup_deps() after the entry for .s3cfg:
 
-4) Modify the following files under the [shared](shared) folder.
+	# The following file contains the github user ID and password
+	fname = os.path.join(home,".netrc")
+	if os.path.isfile(fname) and os.access(fname, os.R_OK):
+		copyanything(fname,"shared/netrc")
 
-* s3cfg
+	fname = os.path.join(home,".gitconfig")
+	if os.path.isfile(fname) and os.access(fname, os.R_OK):
+	    copyanything(fname,"shared/gitconfig")
 
-For each of the files, replace the following values with those from the `~/.docker-images` file.
+4) ** Only Required for Cloudubu64dk **
+Add the following 2 lines:
 
-* Replace **{{aws-access-key-id}}** with the corresponding value from ~/.docker-images.
-* Replace **{{aws-secret-access-key}}** with the corresponding value of ~/.docker-images.
+	ADD shared/netrc ${HOME}/.netrc
+	RUN chown ${USERNAME}:${GROUP} ${HOME}/.netrc
 
-Building the images
-===================
+to the file:
+
+	docker-images/jenkins-local/installer/Dockerfile.templ
+
+after the lines:
+
+	#Configure git
+	ADD shared/gitconfig ${HOME}/.gitconfig
+	RUN chown ${USERNAME}:${GROUP} ${HOME}/.gitconfig
+
+5) As SUDO or ROOT, create the following directories
+
+	mkdir /srv
+	mkdir /srv/builds
+
+Then make them readable and writable to the world
+
+	chmod go+rw /srv
+	chmod go+rw /srv/builds
+
+6) Configure the docker-images project:
+
+	cd ~/docker-images
+	./configure
+
+7) Building the images
 ```bash
-cd ~/docker-images
-./configure
-make
+
+	cd ~/docker-images
+	make
+
+Alternately, to capture the output:
+
+	make 2>&1 | tee ../make.log
+
 ```
