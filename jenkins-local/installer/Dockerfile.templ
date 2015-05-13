@@ -63,6 +63,7 @@ RUN cd ${IA_HOME}/resource/installer_vms && \
 RUN mkdir ${IA_HOME}/MyLicenses && \
     cd ${IA_HOME}/MyLicenses && \
     s3cmd get s3://cloudant-local-installer/installAnywhere/cloudant.lic && \
+    mkdir -p ${HOME}/.InstallAnywhere/165/Premier/preferences && \
     cd ${HOME}/.InstallAnywhere/165/Premier/preferences && \
     s3cmd get s3://cloudant-local-installer/installAnywhere/com.zerog.ia.Designer.properties && \
     cd ${IA_HOME} && \
