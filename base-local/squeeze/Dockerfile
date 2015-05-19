@@ -8,10 +8,10 @@ WORKDIR /tmp
 
 # Use httpredir
 RUN sed -i s/http.debian.net/httpredir.debian.org/g /etc/apt/sources.list
-
+ 
 RUN apt-get -qq update && \
     apt-get install -qq -y --force-yes --no-install-recommends \
-	apt-utils \
+    apt-utils \
     autoconf \
     automake \
     build-essential \
@@ -66,8 +66,13 @@ RUN apt-get install -y --force-yes openssh-server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
 
-# Install JDK
-RUN apt-get install -y --force-yes --no-install-recommends openjdk-6-jdk
+# Since openJDK 7 doesn't exist for debian 6, we need to install oracle's JDK 7            
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886
+RUN echo deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main > /etc/apt/sources.list.d/webupd8team-java.list
+RUN echo deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main >> /etc/apt/sources.list.d/webupd8team-java.list
+RUN apt-get update
+RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+RUN apt-get install -y --force-yes oracle-java7-installer
 
 # Install fpm
 RUN gem install fpm

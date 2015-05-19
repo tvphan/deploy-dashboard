@@ -56,7 +56,7 @@ RUN apt-get -qq install -y --force-yes --no-install-recommends \
     unzip \
     wget \
     sudo  \
-	openjdk-6-jdk \
+	openjdk-7-jdk \
     libxml2-dev \
     libxslt-dev \
     libcurl4-openssl-dev \

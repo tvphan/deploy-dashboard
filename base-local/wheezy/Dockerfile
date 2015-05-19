@@ -68,7 +68,7 @@ RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pa
 RUN mkdir -p /var/run/sshd
 
 # Install JDK
-RUN apt-get install -y --force-yes --no-install-recommends openjdk-6-jdk
+RUN apt-get install -y --force-yes --no-install-recommends openjdk-7-jdk
 
 # Install fpm
 RUN gem install fpm
