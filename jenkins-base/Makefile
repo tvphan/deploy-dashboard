@@ -1,3 +1,3 @@
-DIRS = squeeze precise wheezy jessie trusty
+DIRS = squeeze precise wheezy jessie trusty lucid
 
 include ../make/subdirs.mk
