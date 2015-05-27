@@ -4,6 +4,9 @@ FROM {{os_brand}}:{{os_codename}}
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 ENV DEBIAN_FRONTEND noninteractive
 
+# For some reason, home is not set at this point
+ENV HOME /root
+
 # Use httpredir
 RUN sed -i s/http.debian.net/httpredir.debian.org/g /etc/apt/sources.list
 
