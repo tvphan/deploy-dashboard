@@ -35,6 +35,7 @@ RUN chmod +x /usr/local/bin/kerl
 
 # Build erlang releases
 ENV KERL_CONFIGURE_OPTIONS --enable-kernel-poll --enable-hipe --enable-threads --enable-smp-support --enable-m64-build
+ENV CFLAGS -D_FORTIFY_SOURCE=0
 RUN mkdir -p /opt/builds
 
 RUN kerl build R14B01 r14b01
