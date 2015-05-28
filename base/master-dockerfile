@@ -4,8 +4,15 @@ FROM {{os_brand}}:{{os_codename}}
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 ENV DEBIAN_FRONTEND noninteractive
 
+{% if os_brand == 'debian' %}
 # Use httpredir
 RUN sed -i s/http.debian.net/httpredir.debian.org/g /etc/apt/sources.list
+{% endif %}
+
+{% if os_codename == 'lucid' %}
+# For some reason, home is not set at this point
+ENV HOME /root
+{% endif %}
 
 RUN apt-get -qq update && \
     apt-get install -qq -y --force-yes --no-install-recommends \
@@ -15,12 +22,10 @@ RUN apt-get -qq update && \
     build-essential \
     ca-certificates \
     curl \
-    git \
     python \
     python-pip \
     python-setuptools \
     rsync \
-    rubygems \
     s3cmd \
     subversion \
     sudo \
@@ -32,6 +37,16 @@ RUN apt-get -qq update && \
     libncurses5-dev \
     lsb-release \
     libssl-dev
+
+{% if os_codename == 'lucid' %}
+RUN apt-get install -qq -y git-core
+{% else %}
+RUN apt-get install -qq -y git
+{% endif %}
+
+{% if os_codename != 'trusty' %}
+RUN apt-get install -qq -y rubygems
+{% endif %}
 
 # Install kerl
 RUN curl -o /usr/local/bin/kerl https://raw.githubusercontent.com/spawngrid/kerl/master/kerl
