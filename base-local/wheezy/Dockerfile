@@ -27,6 +27,7 @@ RUN apt-get -qq update && \
 	libpcre3 \
 	libpcre3-dev \
 	libssl-dev \
+	openjdk-6-jdk \
 	python \
 	python-pip \
 	python-setuptools \
@@ -66,9 +67,6 @@ RUN pip install -q jinja2 pyyaml
 RUN apt-get install -y --force-yes openssh-server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
-
-# Install JDK
-RUN apt-get install -y --force-yes --no-install-recommends openjdk-7-jdk
 
 # Install fpm
 RUN gem install fpm
