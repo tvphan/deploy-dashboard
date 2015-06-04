@@ -21,21 +21,20 @@ RUN apt-get -qq update && \
     libssl-dev \
     libtool \
     libz-dev \
-    libnspr4-dev \
-    libicu-dev \
-    libpcre3 \
-    libpcre3-dev \
-    libssl-dev \
-    openjdk-6-jdk \
-    python \
-    python-pip \
-    python-setuptools \
-    rsync \
-    ruby-dev \
-    rubygems \
-    s3cmd \
-    subversion \
-    sudo \
+	libnspr4-dev \
+	libicu-dev \
+	libpcre3 \
+	libpcre3-dev \
+	libssl-dev \
+	python \
+	python-pip \
+	python-setuptools \
+	rsync \
+	ruby-dev \
+	rubygems \
+	s3cmd \
+	subversion \
+	sudo \
     tar \
     unzip \
     vim \
@@ -67,16 +66,24 @@ RUN apt-get install -y --force-yes openssh-server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
 
+# Since openJDK 7 doesn't exist for debian 6, we need to install oracle's JDK 7            
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886
+RUN echo deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main > /etc/apt/sources.list.d/webupd8team-java.list
+RUN echo deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main >> /etc/apt/sources.list.d/webupd8team-java.list
+RUN apt-get update
+RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+RUN apt-get install -y --force-yes oracle-java7-installer
+
 # Install fpm
 RUN gem install fpm
 RUN ln -s /var/lib/gems/1.8/bin/fpm /usr/local/bin
 
 # Install rebar from github
 RUN curl -L https://github.com/rebar/rebar/wiki/rebar > /usr/local/bin/rebar \
-    && chmod +rx /usr/local/bin/rebar
+	&& chmod +rx /usr/local/bin/rebar
 
 RUN cd /opt && \
-    wget -q http://mirror.metrocast.net/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz && \
+	wget -q http://mirror.metrocast.net/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz && \
     tar -xvf apache-maven-3.2.5-bin.tar.gz && \
     echo "export M2_HOME=/opt/apache-maven-3.2.5" > /etc/profile.d/maven.sh && \
     echo "export M2=\$M2_HOME/bin" >> /etc/profile.d/maven.sh && \

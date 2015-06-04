@@ -14,17 +14,6 @@ RUN adduser --quiet jenkins
 # Set password for the jenkins user (you may want to alter this).
 RUN echo "jenkins:jenkins" | chpasswd
 
-# Since openJDK 7 doesn't exist for debian 6, we need to install oracle's JDK 7 instead.
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886
-RUN echo deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main > /etc/apt/sources.list.d/webupd8team-java.list
-RUN echo deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main >> /etc/apt/sources.list.d/webupd8team-java.list
-RUN apt-get update
-RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-RUN apt-get install -y --force-yes oracle-java7-installer
-
-# Need to reset javac to use jdk1.6 instead of 1.7.
-RUN update-alternatives --set javac /usr/lib/jvm/java-6-openjdk/bin/javac
-
 # Configure git
 ADD shared/gitconfig /home/jenkins/.gitconfig
 RUN chown jenkins:jenkins /home/jenkins/.gitconfig

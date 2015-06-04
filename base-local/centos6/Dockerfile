@@ -35,7 +35,7 @@ RUN yum -q -y install \
     git \
 	glibc-devel \
     glibc-static \
-    java-1.6.0-openjdk-devel \
+    java-1.7.0-openjdk-devel \
 	js-devel \
 	libicu-devel \
     libtool \
