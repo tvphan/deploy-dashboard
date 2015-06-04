@@ -21,6 +21,10 @@ RUN adduser -d $HOME jenkins
 RUN echo "jenkins:jenkins" | chpasswd
 RUN gem install fpm
 
+#Install JRE 1.7 since jenkins requires it to launch docker slaves.
+RUN yum -q -y install \
+	java-1.7.0-openjdk
+
 # Configure git
 ADD shared/gitconfig $HOME/.gitconfig
 RUN chown jenkins:jenkins $HOME/.gitconfig \

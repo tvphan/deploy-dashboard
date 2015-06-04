@@ -15,7 +15,14 @@ RUN adduser --quiet jenkins
 RUN echo "jenkins:jenkins" | chpasswd
 RUN chown -R jenkins:jenkins /home/jenkins
 
-# Add the aptly & cloudant local public repository to the list
+#Install JRE 1.7 since jenkins requires it to launch docker slaves.
+RUN apt-get -qq install -y --force-yes --no-install-recommends \
+        openjdk-7-jre
+
+# Need to set the java runtime to be 1.7.
+RUN update-alternatives --set java /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
+
+# Add th aptly & cloudant local public repository to the list
 RUN echo "deb http://repo.aptly.info/ squeeze main" >> /etc/apt/sources.list
 RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-local-extdeps/releases/ubuntu/latest precise main" >> /etc/apt/sources.list
 
