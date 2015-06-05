@@ -7,6 +7,7 @@ Docker files for development, test and production use. The docker files are grou
 * jenkins-base - Jenkins basic dockerfiles including SSH + 'jenkins' user configuration.
 * base-local - Base development dockerfiles for Cloudant Local.
 * jenkins-local - Jenkins specific dockerfiles for Cloudant Local.
+* jenkins-dind - Jenkins specific dockerfiles for running jenkins slaves that can run docker inside of them aka DIND.
 
 NOTE: Extra steps have been added for building the Cloudant Local packages and
 	  installer on the cloudubu64dk VM (managed by Rob Silvagni). These extra 
