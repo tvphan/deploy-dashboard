@@ -1,4 +1,4 @@
-# Dockerfile for generating base development image.j
+# Dockerfile for generating base development image
 
 FROM ubuntu:12.04
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
@@ -49,14 +49,14 @@ RUN apt-get -qq install -y --force-yes --no-install-recommends \
     ssh \
     libopenssl-ruby1.8 \
     git \
-	python-dev \
-	python-pip \
-	s3cmd \
+    python-dev \
+    python-pip \
+    s3cmd \
     subversion \
     unzip \
     wget \
     sudo  \
-	openjdk-7-jdk \
+    openjdk-6-jdk \
     libxml2-dev \
     libxslt-dev \
     libcurl4-openssl-dev \

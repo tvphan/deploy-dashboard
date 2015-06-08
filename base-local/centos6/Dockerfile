@@ -33,24 +33,24 @@ RUN yum -q -y install \
     gcc \
     gcc-c++ \
     git \
-	glibc-devel \
+    glibc-devel \
     glibc-static \
-    java-1.7.0-openjdk-devel \
-	js-devel \
-	libicu-devel \
+    java-1.6.0-openjdk-devel \
+    js-devel \
+    libicu-devel \
     libtool \
     make \
     ncurses-devel \
     nspr-devel \
     openssh-server \
     openssl \
-	openssl-devel \
+    openssl-devel \
     passwd \
-	pcre \
-	pcre-devel \
-	python-pip \
-	python-setuptools \
-	readline-devel \
+    pcre \
+    pcre-devel \
+    python-pip \
+    python-setuptools \
+    readline-devel \
     redhat-rpm-config \
     rpmdevtools \
     rpm-build \
@@ -58,7 +58,7 @@ RUN yum -q -y install \
     ruby-devel \
     rubygems \
     rsyslog \
-	s3cmd \
+    s3cmd \
     screen \
     subversion \
     sudo \

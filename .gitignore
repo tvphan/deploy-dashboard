@@ -1,4 +1,5 @@
 shared/id_rsa
+shared/ibm-java*
 base*/*/shared
 base*/*/Dockerfile
 

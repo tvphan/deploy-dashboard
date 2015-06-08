@@ -2,6 +2,7 @@
 
 import optparse as op
 import os
+import sys
 import errno
 import shutil
 import subprocess as sp
@@ -9,8 +10,10 @@ import string
 import jinja2
 import yaml
 import platform
+import urllib
 
 USAGE = "%prog [OPTIONS]"
+IBM_JRE = "ibm-java-jre-7.0-9.0-linux-x86_64.tgz"
 
 OS = {
     'centos6': ('centos', 'centos6'),
@@ -21,6 +24,14 @@ OS = {
     'wheezy': ('debian', '7.0'),
     'jessie': ('debian', '8.0'),
 }
+def report(blocknr, blocksize, size):
+	current = blocknr*blocksize
+	sys.stdout.write("\r{0:.2f}%".format(100.0*current/size))
+
+def download_file(url,dest_file):
+	sys.stdout.write ("\tDownloading " + url)
+	urllib.urlretrieve(url, dest_file, report)
+	sys.stdout.write("\n")
 
 def copyanything(src, dst):
     if os.path.isdir(dst):
@@ -45,7 +56,9 @@ def setup_deps():
     fname = os.path.join(home,".ssh/id_rsa")
     if os.path.isfile(fname) and os.access(fname, os.R_OK):
         shutil.copyfile(fname,"shared/id_rsa")
-
+    
+    if not os.path.isfile("shared/" + IBM_JRE):
+    	download_file("http://s3.amazonaws.com/cloudant-local/" + IBM_JRE, "shared/" + IBM_JRE) 
     fname = os.path.join(home,".s3cfg")
     if os.path.isfile(fname) and os.access(fname, os.R_OK):
         copyanything(fname,"shared/s3cfg")

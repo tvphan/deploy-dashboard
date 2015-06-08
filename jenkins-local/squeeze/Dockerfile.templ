@@ -14,6 +14,16 @@ RUN adduser --quiet jenkins
 # Set password for the jenkins user (you may want to alter this).
 RUN echo "jenkins:jenkins" | chpasswd
 
+# Install IBM's JRE 1.7 since openjdk 1.7 does not exist for this OS.
+ADD shared/ibm-java-jre-7.0-9.0-linux-x86_64.tgz /tmp/ibm-java-7
+RUN cd /usr/lib/jvm && \
+    cp -r /tmp/ibm-java-7/* /usr/lib/jvm/ && \
+    rm -rf /tmp/ibm-java-7
+
+# Set IBM's JRE to be the default java runtime to JRE 1.7
+RUN update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/ibm-java-x86_64-70/jre/bin/java" 1 && \
+    update-alternatives --set java /usr/lib/jvm/ibm-java-x86_64-70/jre/bin/java
+
 # Configure git
 ADD shared/gitconfig /home/jenkins/.gitconfig
 RUN chown jenkins:jenkins /home/jenkins/.gitconfig
