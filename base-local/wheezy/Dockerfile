@@ -11,7 +11,7 @@ RUN sed -i s/http.debian.net/httpredir.debian.org/g /etc/apt/sources.list
 
 RUN apt-get -qq update && \
     apt-get install -qq -y --force-yes --no-install-recommends \
-	apt-utils \
+   	apt-utils \
     autoconf \
     automake \
     build-essential \
@@ -21,21 +21,22 @@ RUN apt-get -qq update && \
     libssl-dev \
     libtool \
     libz-dev \
-	libnspr4-dev \
-	libnspr4-0d \
-	libicu-dev \
-	libpcre3 \
-	libpcre3-dev \
-	libssl-dev \
-	python \
-	python-pip \
-	python-setuptools \
-	rsync \
-	ruby1.8-dev \
-	rubygems \
-	s3cmd \
-	subversion \
-	sudo \
+    libnspr4-dev \
+    libnspr4-0d \
+    libicu-dev \
+    libpcre3 \
+    libpcre3-dev \
+    libssl-dev \
+    openjdk-6-jdk \
+    python \
+    python-pip \
+    python-setuptools \
+    rsync \
+    ruby1.8-dev \
+    rubygems \
+    s3cmd \
+    subversion \
+    sudo \
     tar \
     unzip \
     vim \
@@ -52,10 +53,7 @@ RUN wget -q http://packages.cloudant.com/debian/dists/wheezy/main/binary-amd64/l
 RUN wget -q http://www.erlang.org/download/otp_src_17.1.tar.gz && \
     tar -xvzf otp_src_17.1.tar.gz && \
     cd otp_src_17.1 && \
-    ./configure \
-        --enable-threads \
-        --enable-smp-support \
-        --enable-m64-build && \
+    ./configure --enable-threads --enable-smp-support --enable-m64-build && \
     make && \
     make install
 
@@ -66,9 +64,6 @@ RUN pip install -q jinja2 pyyaml
 RUN apt-get install -y --force-yes openssh-server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
-
-# Install JDK
-RUN apt-get install -y --force-yes --no-install-recommends openjdk-7-jdk
 
 # Install fpm
 RUN gem install fpm

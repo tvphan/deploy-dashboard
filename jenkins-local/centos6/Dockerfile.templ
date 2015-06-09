@@ -21,6 +21,9 @@ RUN adduser -d $HOME jenkins
 RUN echo "jenkins:jenkins" | chpasswd
 RUN gem install fpm
 
+# Install JRE1.7 and make it the default java runtime
+RUN yum -q -y install java-1.7.0-openjdk
+
 # Configure git
 ADD shared/gitconfig $HOME/.gitconfig
 RUN chown jenkins:jenkins $HOME/.gitconfig \

@@ -19,6 +19,10 @@ RUN chown -R jenkins:jenkins /home/jenkins
 RUN echo "deb http://repo.aptly.info/ squeeze main" >> /etc/apt/sources.list
 RUN echo "deb [arch=amd64] http://s3.amazonaws.com/cloudant-local-extdeps/releases/ubuntu/latest precise main" >> /etc/apt/sources.list
 
+# Install JRE1.7 and set it to be the default java runtime
+RUN apt-get -qq install -y --force-yes --no-install-recommends openjdk-7-jre && \
+    update-alternatives --set java /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
+ 
 # Install aptly
 RUN gpg --keyserver keys.gnupg.net --recv-keys 2A194991
 RUN gpg -a --export 2A194991 | sudo apt-key add -
