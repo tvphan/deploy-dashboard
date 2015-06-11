@@ -22,6 +22,9 @@ RUN apt-get -qq update && \
     build-essential \
     ca-certificates \
     curl \
+    libz-dev \
+    libpcre3 \
+    libpcre3-dev \
     python \
     python-pip \
     python-setuptools \
