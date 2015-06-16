@@ -15,6 +15,34 @@ import urllib
 USAGE = "%prog [OPTIONS]"
 IBM_JRE = "ibm-java-jre-7.0-9.0-linux-x86_64.tgz"
 
+# NOTE: Format style of strings below are deliberate.
+# This is to make sure they work when added to a Dockerfile
+IBM_JRE_INSTALL = """# Install IBM's JRE 1.7 since openjdk 1.7 does not exist for this OS.
+ADD shared/ibm-java-jre-7.0-9.0-linux-x86_64.tgz /tmp/ibm-java-7
+RUN cd /usr/lib/jvm && \\
+    cp -r /tmp/ibm-java-7/* /usr/lib/jvm/ && \\
+    rm -rf /tmp/ibm-java-7
+# Install IBM's JRE. Do not set to java runtime to JRE 1.7
+RUN update-alternatives --install \
+"/usr/bin/java" "java" "/usr/lib/jvm/ibm-java-x86_64-70/jre/bin/java" 1 && \\
+    update-alternatives --set java /usr/lib/jvm/java-6-openjdk/jre/bin/java
+"""
+
+OPEN_JRE_INSTALL = """# Install JRE 1.7. Do not set it to default jre
+RUN apt-get -qq install -y --force-yes --no-install-recommends openjdk-7-jre && \\
+    update-alternatives --set java /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java
+"""
+
+# For jenkins-base image
+JRE_OS = {
+    'precise': OPEN_JRE_INSTALL,
+    'wheezy': OPEN_JRE_INSTALL,
+    'lucid': IBM_JRE_INSTALL,
+    'squeeze': IBM_JRE_INSTALL,
+    'trusty': '',
+    'jessie': '',
+    'centos6': ''
+}
 OS = {
     'centos6': ('centos', 'centos6'),
     'lucid': ('ubuntu', '10.04'),
@@ -24,6 +52,8 @@ OS = {
     'wheezy': ('debian', '7.0'),
     'jessie': ('debian', '8.0'),
 }
+
+
 def report(blocknr, blocksize, size):
 	current = blocknr*blocksize
 	sys.stdout.write("\r{0:.2f}%".format(100.0*current/size))
@@ -96,6 +126,7 @@ def convert_templates (proj_dir, ctx):
             if codename in OS.keys(): 
                 ctx['os_codename'] = codename
                 ctx['os_brand'], ctx['os_version'] = OS[codename]
+                ctx['jre17_install'] = JRE_OS[codename]
 
             data = jinja2.Template(data, trim_blocks=True, lstrip_blocks=True).render(**ctx)
 
