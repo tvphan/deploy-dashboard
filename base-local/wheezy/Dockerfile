@@ -23,7 +23,6 @@ RUN apt-get -qq update && \
     libz-dev \
     libnspr4-dev \
     libnspr4-0d \
-    libicu-dev \
     libpcre3 \
     libpcre3-dev \
     libssl-dev \
@@ -41,10 +40,6 @@ RUN apt-get -qq update && \
     unzip \
     vim \
     wget
-
-# Install libicu-42
-RUN wget http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu42_4.2.1-3_amd64.deb
-RUN dpkg -i libicu42_4.2.1-3_amd64.deb
 
 RUN wget -q http://packages.cloudant.com/debian/dists/wheezy/main/binary-amd64/libmozjs185-cloudant_1.8.5-cloudant1_amd64.deb && \
     wget -q http://packages.cloudant.com/debian/dists/wheezy/main/binary-amd64/libmozjs185-cloudant-dev_1.8.5-cloudant1_amd64.deb && \

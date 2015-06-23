@@ -60,7 +60,6 @@ RUN apt-get -qq install -y --force-yes --no-install-recommends \
     libxml2-dev \
     libxslt-dev \
     libcurl4-openssl-dev \
-    libicu-dev \
     libmozjs185-dev \
     libpcre3 \
     libpcre3-dev \
