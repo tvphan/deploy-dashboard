@@ -37,7 +37,6 @@ RUN yum -q -y install \
     glibc-static \
     java-1.6.0-openjdk-devel \
     js-devel \
-    libicu-devel \
     libtool \
     make \
     ncurses-devel \

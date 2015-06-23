@@ -22,7 +22,6 @@ RUN apt-get -qq update && \
     libtool \
     libz-dev \
     libnspr4-dev \
-    libicu-dev \
     libpcre3 \
     libpcre3-dev \
     libssl-dev \
