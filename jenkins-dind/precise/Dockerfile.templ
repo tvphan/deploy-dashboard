@@ -1,6 +1,6 @@
 # Dockerfile for the jenkins '{{os_codename}}' slave
 
-FROM cloudant/jenkins-base-precise:{{docker.tag}}
+FROM cloudant/jenkins-local-precise:{{docker.tag}}
 MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 
 ENV DEBIAN_FRONTEND noninteractive
