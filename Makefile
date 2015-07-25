@@ -6,4 +6,4 @@ jenkins-base: base
 
 jenkins-local: base-local
 
-jenkins-dind: jenkins-base
+jenkins-dind: jenkins-local
