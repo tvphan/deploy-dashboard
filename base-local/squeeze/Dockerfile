@@ -59,9 +59,11 @@ RUN apt-get install -y --force-yes openssh-server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
 
-# Install fpm
-RUN gem install fpm
-RUN ln -s /var/lib/gems/1.8/bin/fpm /usr/local/bin
+# Install fpm and pin it at 1.3.3 for this platform.
+RUN gem install fpm -v 1.3.3
+RUN if [ ! -e /usr/local/bin/fpm ]; then \
+        ln -s /var/lib/gems/1.8/bin/fpm /usr/local/bin/fpm; \
+    fi
 
 # Install rebar from github
 RUN curl -L https://github.com/rebar/rebar/wiki/rebar > /usr/local/bin/rebar && \
