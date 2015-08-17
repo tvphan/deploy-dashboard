@@ -106,6 +106,14 @@ RUN if [ ! -e /usr/local/bin/fpm ]; then \
 # Install the python modules
 RUN pip install -q jinja2 pyyaml
 
+# Install python 2.7.10 as an alternative invokable with python2.7 
+RUN wget -O /tmp/Python-2.7.10.tar.xz https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tar.xz
+RUN echo "c685ef0b8e9f27b5e3db5db12b268ac6  /tmp/Python-2.7.10.tar.xz" > /tmp/Python-2.7.10.tar.xz.md5 && md5sum --check /tmp/Python-2.7.10.tar.xz.md5
+RUN tar xf /tmp/Python-2.7.10.tar.xz && cd /tmp/Python-2.7.10 && sudo ./configure && sudo make altinstall && rm /tmp/Python-2.7.10.tar.xz && rm /tmp/Python-2.7.10.tar.xz.md5
+WORKDIR /
+RUN sudo rm -rf /tmp/Python-2.7.10
+
+
 RUN apt-get -qq purge
 
 # Standard SSH port
