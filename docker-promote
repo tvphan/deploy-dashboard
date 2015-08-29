@@ -68,7 +68,7 @@ def _create_tag(repo_name, from_tag, to_tag, verbose=False):
         print ("{0}: Container ID = {1}".format(func_name, container_id))
 
     subprocess.call(['docker','commit',container_id,repo_name+":"+to_tag],stdout=subprocess.PIPE)
-#    subprocess.call(['docker','rm','-f', container_id],stdout=subprocess.PIPE)
+    subprocess.call(['docker','rm','-f', container_id],stdout=subprocess.PIPE)
 
 def _promote_all(from_tag, to_tag, verbose=False):
     """
