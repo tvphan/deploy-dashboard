@@ -1,53 +1,49 @@
 #!/usr/bin/env python
 
 """
-docker-purge - Removes all the images tags other than the latest tag.
+docker-purge - Removes all the orphaned / invalid images and remove running containers.
 """
 
 import optparse as op
 import subprocess
 import sys
 
-USAGE = "%prog [OPTIONS] REPO_NAME"
+USAGE = "%prog [OPTIONS]"
 
-def _purge_tags(repo_name, tag_list, verbose=False):
+def _purge_containers(verbose=False):
     """
-    Purges/Removes all tags for a repository other than "latest"
+    Delete all running containers
 
-    :param repo_name: The name of the repository to purge.
-    :param tag_list: A list of tag assigned to the repository.
-    :param verbose: If True, generates additional output (Default: False)
-
-    :return: Nothing
-    """
-
-    func_name = sys._getframe().f_code.co_name
-    if verbose:
-        print ("{0}: Arg1 repo_name = {1}".format(func_name, repo_name))
-        print ("{0}: Arg2 tag_list = {1}".format(func_name, tag_list))
-
-    for tag in tag_list:
-        if (tag != "latest"):
-            subprocess.call(['docker','rmi',repo_name+":"+tag],stdout=subprocess.PIPE)
-            if verbose:
-                print ("{0}: purging {1}:{2}".format(func_name, repo_name, tag))
-
-
-def _get_tag_list(repo_name, verbose=False):
-    """
-    Retrieves a list of tags with the same repository name.
-
-    :param repo_name: The name of the repository who tags are to be retrieved.
     :param verbose: If True, generates additional output (Default: False).
 
-    :return: List of docker tags.
     """
     func_name = sys._getframe().f_code.co_name
-    if verbose:
-        print ("{0}: Arg1 repo_name = {1}".format(func_name, repo_name))
+    proc = subprocess.Popen(['docker','ps','-a'],stdout=subprocess.PIPE)
 
+    while True:
+        line = proc.stdout.readline().rstrip()
+        if line != '':
+            fields = line.split()
+            if verbose:
+                print ("{0}: Processing {1}".format(func_name, fields))
+            if ((fields[0] != "CONTAINER")):
+                subprocess.call(['docker','rm','-f', fields[0]],stdout=subprocess.PIPE)
+                if verbose:
+                    print ("{0}: Deleting container {1}".format(func_name, fields[0]))
+
+        else:
+            break
+
+def _purge_images(verbose=False):
+    """
+    Delete orphaned / unreachable images
+
+    :param verbose: If True, generates additional output (Default: False).
+
+    """
+    func_name = sys._getframe().f_code.co_name
     proc = subprocess.Popen(['docker','images'],stdout=subprocess.PIPE)
-    tag_list=[]
+
     while True:
         line = proc.stdout.readline().rstrip()
         if line != '':
@@ -55,14 +51,13 @@ def _get_tag_list(repo_name, verbose=False):
             if verbose:
                 print ("{0}: Processing {1}". format(func_name, fields))
 
-            if ((fields[0] == repo_name)):
-                tag_list.append(fields[1])
+            if ((fields[0] == "<none>")):
+                subprocess.call(['docker','rmi','-f', fields[2]],stdout=subprocess.PIPE)
                 if verbose:
-                    print ("{0}: Match found, adding tag {1} to the tag list.". format(func_name, fields[1]))
+                    print ("{0}: Deleting image {1}".format(func_name, fields[2]))
 
         else:
             break
-    return tag_list
 
 def _options():
     """
@@ -78,15 +73,11 @@ def _options():
 def main():
     parser = op.OptionParser(usage=USAGE, option_list=_options())
     opts, args = parser.parse_args()
-    if len(args) == 0:
-		parser.error("Repository Name required")
-    elif len(args) > 1:
-        parser.error("Unknown arguments: " + ", ".join(args[1:]))
-    else:
-        repo_name = args[0]
+    if len(args) > 0:
+        parser.error("Unknown arguments: " + ", ".join(args[0:]))
 
-    image_list = _get_tag_list(repo_name, opts.verbose)
-    _purge_tags(repo_name, image_list, opts.verbose)
+    _purge_containers(opts.verbose)
+    _purge_images(opts.verbose)
 
 if __name__ == "__main__":
     main()
