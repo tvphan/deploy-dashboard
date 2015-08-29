@@ -8,31 +8,7 @@ import optparse as op
 import subprocess
 import sys
 
-USAGE = "%prog [OPTIONS] REPO_NAME FROM_TAG TO_TAG [TO_TAG ...]"
-
-def _promote_id(repo_name, image_id, tags, verbose=False):
-    """
-    Promotes a docker image using a release tag (Ex. latest, 1.0.0, etc.)
-
-    :param repo_name: Name of the docker repository to promote (Ex. cloudant/base-local-centos6).
-    :param image_id: The docker image ID to be promoted.
-    :param tags: The docker tag to apply (Ex. latest, 1.0.0, etc.).
-    :param verbose: If True, generates additional output (Default: False)
-
-    :return: Nothing
-    """
-
-    func_name = sys._getframe().f_code.co_name
-    if verbose:
-        print ("{0}: Arg1 repo_name = {1}".format(func_name, repo_name))
-        print ("{0}: Arg2 image_id = {1}".format(func_name,image_id))
-        print ("{0}: Arg3 tags = {1}".format(func_name,tags))
-
-    for tag in tags:
-        if verbose:
-            print ("{0}: Tagging image {1} to {2}:{3}".format(func_name,image_id, repo_name, tag))
-        subprocess.call(['docker','tag','-f',image_id,repo_name+":"+tag],stdout=subprocess.PIPE)
-
+USAGE = "%prog [OPTIONS] FROM_TAG TO_TAG [REPO_NAME]"
 
 def _get_image_id(repo_name, tag, verbose=False):
     """
@@ -64,6 +40,60 @@ def _get_image_id(repo_name, tag, verbose=False):
         else:
             break
 
+def _create_tag(repo_name, from_tag, to_tag, verbose=False):
+    """
+    Create a new tag for a given docker repository (Ex. latest)
+
+    :param repo_name: Name of the docker repository (Ex. cloudant/base-local-centos6).
+    :param from_tag: The docker tag of the images to be promoted (Ex. dev).
+    :param to_tag: The docker tag of the newly promoted image (Ex. latest).
+    :param verbose: If True, generates additional output (Default: False)
+
+    :return: Nothing
+    """
+
+    func_name = sys._getframe().f_code.co_name
+    if verbose:
+        print ("{0}: Arg1 repo_name = {1}".format(func_name, repo_name))
+        print ("{0}: Arg2 from_tag = {1}".format(func_name, from_tag))
+        print ("{0}: Arg3 to_tag = {1}".format(func_name, to_tag))
+
+    if verbose:
+        print ("{0}: Promoting {1}:{2} to tag {3}".format(func_name, repo_name, from_tag, to_tag))
+
+    image_id = _get_image_id(repo_name, from_tag, verbose)
+    proc  = subprocess.Popen(['docker','run','-d',image_id],stdout=subprocess.PIPE)
+    container_id = proc.stdout.readline().rstrip()
+    if verbose:
+        print ("{0}: Container ID = {1}".format(func_name, container_id))
+
+    subprocess.call(['docker','commit',container_id,repo_name+":"+to_tag],stdout=subprocess.PIPE)
+#    subprocess.call(['docker','rm','-f', container_id],stdout=subprocess.PIPE)
+
+def _promote_all(from_tag, to_tag, verbose=False):
+    """
+    Promotes all images with a given tag
+
+    :param from_tag: The docker tag of the images to be promoted (Ex. dev).
+    :param to_tag: The docker tag of the newly promoted images (Ex. latest).
+    :param verbose: If True, generates additional output (Default: False).
+
+    :return: List of orphaned image ids.
+    """
+    func_name = sys._getframe().f_code.co_name
+    proc = subprocess.Popen(['docker','images'],stdout=subprocess.PIPE)
+    while True:
+        line = proc.stdout.readline().rstrip()
+        if line != '':
+            fields = line.split()
+            if verbose:
+                print ("{0}: Processing {1}". format(func_name, fields))
+
+            if ((fields[1] == from_tag)):
+                _create_tag (fields[0], from_tag, to_tag, verbose)
+        else:
+            break
+
 def _options():
     """
     Returns program options.
@@ -79,18 +109,15 @@ def _options():
 def main():
     parser = op.OptionParser(usage=USAGE, option_list=_options())
     opts, args = parser.parse_args()
-    if len(args) == 0 or len(args) < 3:
-		parser.error("Must have a minumum of 3 arguments")
+    if len(args) == 0 or len(args) < 2:
+		parser.error("Minumum of 2 arguments required")
     else:
-        repo_name = args[0]
-        from_tag = args[1]
-        to_tags = []
-        for arg in args[2:]:
-            to_tags.append(arg)
-
-        image_id = _get_image_id(repo_name, from_tag, opts.verbose)
-        if (image_id != None):
-            _promote_id(repo_name,image_id, to_tags, opts.verbose)
+        from_tag = args[0]
+        to_tag = args[1]
+        if len(args) > 2:
+            _create_tag(args[2], from_tag, to_tag, opts.verbose)
+        else:
+            _promote_all(from_tag, to_tag, opts.verbose)
 
 if __name__ == "__main__":
     main()
