@@ -16,6 +16,13 @@ RUN apt-get update -qq && apt-get install -qqy \
 # Install Docker from Docker Inc. repositories.
 RUN curl -sSL https://get.docker.com/ubuntu/ | sh
 
+# Install rvm needed for rake test on chef-repo
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+RUN curl -sSL https://get.rvm.io | sudo bash -s stable --ruby=1.9.3-p448
+RUN usermod -a -G rvm jenkins
+RUN mkdir -p /home/jenkins/.chef
+RUN chown jenkins:jenkins /home/jenkins/.chef
+
 # Install the magic wrapper.
 ADD ./wrapdocker /usr/local/bin/wrapdocker
 RUN chmod +x /usr/local/bin/wrapdocker
