@@ -77,9 +77,6 @@ RUN chown -R ${USERNAME}:${GROUP} ${IA_HOME}
 ADD shared/gitconfig ${HOME}/.gitconfig
 RUN chown ${USERNAME}:${GROUP} ${HOME}/.gitconfig
 
-ADD shared/netrc ${HOME}/.netrc
-RUN chown ${USERNAME}:${GROUP} ${HOME}/.netrc
-
 # Setup a basic SSH server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
