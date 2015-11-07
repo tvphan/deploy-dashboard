@@ -57,6 +57,7 @@ RUN mkdir -p ${IA_HOME}/plugins && \
 # Add the IBM installer VM
 RUN cd ${IA_HOME}/resource/installer_vms && \
 	s3cmd get s3://cloudant-local-installer/installAnywhere/resource/installer_vms/IA_ibm_linux_x86_64_71_SR2_FP10.vm && \
+	s3cmd get s3://cloudant-local-installer/installAnywhere/resource/installer_vms/IA_ibm_s390x-linux64_v7_sr5.vm && \
 	chmod 775 *
 
 # Install/Register the IA license
@@ -75,6 +76,9 @@ RUN chown -R ${USERNAME}:${GROUP} ${IA_HOME}
 # Configure git
 ADD shared/gitconfig ${HOME}/.gitconfig
 RUN chown ${USERNAME}:${GROUP} ${HOME}/.gitconfig
+
+ADD shared/netrc ${HOME}/.netrc
+RUN chown ${USERNAME}:${GROUP} ${HOME}/.netrc
 
 # Setup a basic SSH server
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
