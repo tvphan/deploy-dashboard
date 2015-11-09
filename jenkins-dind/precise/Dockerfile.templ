@@ -5,6 +5,9 @@ MAINTAINER Cloudant, An IBM Company <support@cloudant.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# Create the docker group
+RUN groupadd docker
+
 # Basic configuration.
 RUN apt-get update -qq && apt-get install -qqy \
     apt-transport-https \
