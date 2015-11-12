@@ -71,3 +71,6 @@ RUN kerl install 17.5 /opt/builds/17.5
 
 RUN kerl build 18.0 18.0
 RUN kerl install 18.0 /opt/builds/18.0
+
+RUN kerl build 18.1.3 18.1.3
+RUN kerl install 18.1.3 /opt/builds/18.1.3
