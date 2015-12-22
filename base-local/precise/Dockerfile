@@ -19,6 +19,7 @@ RUN apt-get install -y --force-yes \
     erlang-asn1=$ERLANG_VERSION \
     erlang-crypto=$ERLANG_VERSION \
     erlang-dev=$ERLANG_VERSION \
+    erlang-eldap=$ERLANG_VERSION \
     erlang-eunit=$ERLANG_VERSION \
     erlang-inets=$ERLANG_VERSION \
     erlang-os-mon=$ERLANG_VERSION \
