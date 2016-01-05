@@ -39,7 +39,8 @@ RUN apt-get -qq update && \
     less \
     libncurses5-dev \
     lsb-release \
-    libssl-dev
+    libssl-dev \
+    libreadline-dev
 
 {% if os_codename == 'lucid' %}
 RUN apt-get install -qq -y git-core
