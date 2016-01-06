@@ -98,11 +98,11 @@ RUN chmod +rx /usr/local/bin/rebar
 RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
 
-# Install fpm. Need to pin it at 1.3.3 for this platform
+# Need to install the 0.7.2 version of the cabin gem that FPM depends on to address FB ticket 58823 
+RUN gem install cabin -v 0.7.2
+
+#Install fpm. Need to pin it at 1.3.3 for this platform
 RUN gem install fpm -v 1.3.3
-RUN if [ ! -e /usr/local/bin/fpm ]; then \
-        ln -s /var/lib/gems/1.8/bin/fpm /usr/local/bin/fpm; \
-    fi
 
 # Install the python modules
 RUN pip install -q jinja2 pyyaml
@@ -114,7 +114,6 @@ RUN echo "c685ef0b8e9f27b5e3db5db12b268ac6  /tmp/Python-2.7.10.tar.xz" > /tmp/Py
 RUN tar xf /tmp/Python-2.7.10.tar.xz && cd /tmp/Python-2.7.10 && sudo ./configure && sudo make altinstall && rm /tmp/Python-2.7.10.tar.xz && rm /tmp/Python-2.7.10.tar.xz.md5
 WORKDIR /
 RUN sudo rm -rf /tmp/Python-2.7.10
-
 
 RUN apt-get -qq purge
 
