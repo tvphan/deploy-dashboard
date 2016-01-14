@@ -5,3 +5,4 @@ base*/*/Dockerfile
 
 jenkins*/*/shared
 jenkins*/*/Dockerfile
+!jenkins-local/centos7/Dockerfile
