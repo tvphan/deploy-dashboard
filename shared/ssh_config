@@ -3,8 +3,3 @@ Host github.com
    HostName github.com
    IdentityFile ~/.ssh/id_rsa
    User jenkins
-
-Host demo.github.com
-   HostName github.com
-   IdentityFile ~/.ssh/demo_id_rsa
-   User demo
