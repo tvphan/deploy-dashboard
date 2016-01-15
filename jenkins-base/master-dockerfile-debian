@@ -28,6 +28,7 @@ ADD shared/gitconfig /home/jenkins/.gitconfig
 RUN sudo chown jenkins:jenkins /home/jenkins/.gitconfig
 
 # Install and configure ssh
+RUN sudo apt-get -qq update
 RUN sudo apt-get install -qq -y --force-yes openssh-server
 RUN mkdir -p /home/jenkins/.ssh
 ADD shared/id_rsa /home/jenkins/.ssh/id_rsa

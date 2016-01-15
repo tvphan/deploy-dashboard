@@ -134,6 +134,17 @@ RUN chmod +x /usr/src/selenium-server-standalone-2.48.0.jar
 # Set the DISPLAY environment variable used with Virtual framebuffer
 ENV DISPLAY :0
 
+# Install scala 2.11.7 sbt 0.13.2
+# http://www.scala-lang.org/files/archive/scala-2.11.7.deb
+WORKDIR /tmp
+RUN wget -O /tmp/scala-2.11.7.deb http://www.scala-lang.org/files/archive/scala-2.11.7.deb
+RUN sudo dpkg -i scala-2.11.7.deb && rm /tmp/scala-2.11.7.deb
+
+RUN wget -O /tmp/sbt-0.13.2.deb http://dl.bintray.com/sbt/debian/sbt-0.13.2.deb
+RUN echo "daa304595c0132c34b170b1e1a6b4044  /tmp/sbt-0.13.2.deb" > /tmp/sbt-0.13.2.deb.md5 && md5sum --check /tmp/sbt-0.13.2.deb.md5
+RUN sudo dpkg -i sbt-0.13.2.deb && rm /tmp/sbt-0.13.2.deb*
+WORKDIR /
+
 # Standard SSH port
 ONBUILD EXPOSE 22
 ONBUILD WORKDIR /tmp
