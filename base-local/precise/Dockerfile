@@ -117,6 +117,23 @@ RUN sudo rm -rf /tmp/Python-2.7.10
 
 RUN apt-get -qq purge
 
+# Nightwatch related install
+# Install nodejs & npm, firefox & virtual framebuffer
+RUN curl -sL https://deb.nodesource.com/setup | sudo bash -
+RUN apt-get install -y --force-yes --no-install-recommends \
+    nodejs firefox xvfb
+
+# Use npm to install Nightwatch globally in /usr/lib/node_modules/nightwatch
+RUN sudo npm install -g nightwatch
+
+# Use wget to download selenium stand-alone server
+RUN sudo wget http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.0.jar
+RUN sudo mv selenium-server-standalone-2.48.0.jar /usr/src
+RUN chmod +x /usr/src/selenium-server-standalone-2.48.0.jar
+
+# Set the DISPLAY environment variable used with Virtual framebuffer
+ENV DISPLAY :0
+
 # Standard SSH port
 ONBUILD EXPOSE 22
 ONBUILD WORKDIR /tmp
