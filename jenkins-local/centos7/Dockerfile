@@ -84,7 +84,7 @@ RUN yum -q clean all \
 
 # Setup ssh 
     && ssh-keygen -q -t rsa -f /etc/ssh/ssh_host_rsa_key -N '' \
-    && sed --quiet -i 's|session required pam_loginuid.so|session optional pam_loginuid.so|g' /etc/pam.d/sshd \
+    && sed -i 's|session required pam_loginuid.so|session optional pam_loginuid.so|g' /etc/pam.d/sshd \
     && mkdir -p /var/run/sshd \
 
 # Install the python modules
