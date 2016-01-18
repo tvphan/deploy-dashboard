@@ -13,7 +13,7 @@ RUN apt-get -qq update \
     && rm erlang-solutions_1.0_all.deb \
     && apt-get -qq update
 
-ENV ERLANG_VERSION 1:17.1
+ENV ERLANG_VERSION 1:17.5
 RUN apt-get install -y --force-yes \
     erlang-base=$ERLANG_VERSION \
     erlang-asn1=$ERLANG_VERSION \
