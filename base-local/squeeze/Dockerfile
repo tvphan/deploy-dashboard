@@ -44,9 +44,9 @@ RUN wget -q http://packages.cloudant.com/debian/dists/squeeze/main/binary-amd64/
     wget -q http://packages.cloudant.com/debian/dists/squeeze/main/binary-amd64/libmozjs185-cloudant-dev_1.8.5-cloudant1_amd64.deb && \
     dpkg -i -R /tmp/libmozjs185*
 
-RUN wget -q http://www.erlang.org/download/otp_src_17.1.tar.gz && \
-    tar -xvzf otp_src_17.1.tar.gz && \
-    cd otp_src_17.1 && \
+RUN wget -q http://www.erlang.org/download/otp_src_17.5.tar.gz && \
+    tar -xvzf otp_src_17.5.tar.gz && \
+    cd otp_src_17.5 && \
     ./configure --enable-threads --enable-smp-support --enable-m64-build && \
     make && \
     make install

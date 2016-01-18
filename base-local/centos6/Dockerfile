@@ -16,7 +16,7 @@ RUN wget http://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm 
     && rm erlang-solutions-1.0-1.noarch.rpm \
     && yum clean all
 
-ENV ERLANG_VERSION 17.1-1
+ENV ERLANG_VERSION 17.5-1
 RUN yum install -y esl-erlang-$ERLANG_VERSION.x86_64
 
 # Install prereqs
