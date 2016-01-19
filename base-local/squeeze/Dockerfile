@@ -60,6 +60,7 @@ RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pa
 RUN mkdir -p /var/run/sshd
 
 # Install fpm and pin it at 1.3.3 for this platform.
+RUN gem install cabin -v 0.7.2
 RUN gem install fpm -v 1.3.3
 RUN if [ ! -e /usr/local/bin/fpm ]; then \
         ln -s /var/lib/gems/1.8/bin/fpm /usr/local/bin/fpm; \
