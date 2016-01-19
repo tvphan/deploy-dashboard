@@ -19,6 +19,7 @@ RUN cd /etc/yum.repos.d \
 # Set up a user for builds
 RUN adduser -d $HOME jenkins
 RUN echo "jenkins:jenkins" | chpasswd
+RUN gem install cabin -v 0.7.2
 RUN gem install fpm
 
 # Install JRE1.7 and make it the default java runtime
