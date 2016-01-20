@@ -117,6 +117,16 @@ RUN sudo rm -rf /tmp/Python-2.7.10
 
 RUN apt-get -qq purge
 
+# Install python 3.5.1 as an alternative invokable with python3.5
+WORKDIR /tmp
+RUN wget -O /tmp/Python-3.5.1.tar.xz https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tar.xz
+RUN echo "e9ea6f2623fffcdd871b7b19113fde80  /tmp/Python-3.5.1.tar.xz" > /tmp/Python-3.5.1.tar.xz.md5 && md5sum --check /tmp/Python-3.5.1.tar.xz.md5
+RUN tar xf /tmp/Python-3.5.1.tar.xz && cd /tmp/Python-3.5.1 && sudo ./configure && sudo make altinstall && rm /tmp/Python-3.5.1.tar.xz && rm /tmp/Python-3.5.1.tar.xz.md5
+WORKDIR /
+RUN sudo rm -rf /tmp/Python-3.5.1
+
+RUN apt-get -qq purge
+
 # Nightwatch related install
 # Install nodejs & npm, firefox & virtual framebuffer
 RUN curl -sL https://deb.nodesource.com/setup | sudo bash -
@@ -143,6 +153,12 @@ RUN sudo dpkg -i scala-2.11.7.deb && rm /tmp/scala-2.11.7.deb
 RUN wget -O /tmp/sbt-0.13.2.deb http://dl.bintray.com/sbt/debian/sbt-0.13.2.deb
 RUN echo "daa304595c0132c34b170b1e1a6b4044  /tmp/sbt-0.13.2.deb" > /tmp/sbt-0.13.2.deb.md5 && md5sum --check /tmp/sbt-0.13.2.deb.md5
 RUN sudo dpkg -i sbt-0.13.2.deb && rm /tmp/sbt-0.13.2.deb*
+
+#Install spark 1.4.1 hadoop2.6
+RUN wget -O /tmp/spark-1.4.1-bin-hadoop2.6.tgz http://d3kbcqa49mib13.cloudfront.net/spark-1.4.1-bin-hadoop2.6.tgz
+RUN echo "858ab5dd5dc0ad4564affbb8a777ad47  /tmp/spark-1.4.1-bin-hadoop2.6.tgz" > /tmp/spark-1.4.1-bin-hadoop2.6.tgz.md5 && md5sum --check /tmp/spark-1.4.1-bin-hadoop2.6.tgz.md5
+RUN tar xf /tmp/spark-1.4.1-bin-hadoop2.6.tgz && mv /tmp/spark-1.4.1-bin-hadoop2.6 /opt/spark-1.4.1-bin-hadoop2.6
+
 WORKDIR /
 
 # Standard SSH port
