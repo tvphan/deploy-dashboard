@@ -9,7 +9,7 @@ ENV USERNAME=jenkins \
     PASSWORD=jenkins \
     GROUP=jenkins \
     HOME=/home/jenkins \
-    ERLANG_VERSION=17.5.6.5
+    ERLANG_VERSION=17.5-1
 
 # Set up a user for builds
 RUN adduser -d $HOME $USERNAME \
