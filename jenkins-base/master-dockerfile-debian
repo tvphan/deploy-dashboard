@@ -42,6 +42,14 @@ RUN sudo chown -R jenkins:jenkins /home/jenkins/.s3cfg
 
 USER root
 
+# Add aptly
+RUN echo "deb http://repo.aptly.info/ squeeze main" >> /etc/apt/sources.list
+RUN gpg --keyserver keys.gnupg.net --recv-keys 2A194991
+RUN gpg -a --export 2A194991 | apt-key add -
+RUN apt-get -qq update && apt-get install -qq -y --force-yes aptly
+ADD shared/aptly.conf /home/jenkins/.aptly.conf
+RUN chown jenkins:jenkins /home/jenkins/.aptly.conf
+
 # Create /builds
 RUN mkdir /builds
 RUN chown jenkins:jenkins -R /builds
