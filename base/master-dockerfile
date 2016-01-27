@@ -14,14 +14,6 @@ RUN sed -i s/http.debian.net/httpredir.debian.org/g /etc/apt/sources.list
 ENV HOME /root
 {% endif %}
 
-# Add Cloudant APT repo
-{% if os_brand == 'ubuntu' %}
-RUN echo "deb [arch=amd64] http://apt-us.cloudant.net/cloudant-{{os_brand}} {{os_codename}}-production main" >> /etc/apt/sources.list
-{% else %}
-RUN echo "deb http://apt-us.cloudant.net/cloudant-{{os_brand}} {{os_codename}}-production main" >> /etc/apt/sources.list
-{% endif %}
-RUN curl http://apt.cloudant.net/Cloudant.gpg.key | apt-key add -
-
 # Install minimal and common build dependencies
 RUN apt-get -qq update && \
     apt-get install -qq -y --force-yes --no-install-recommends \
@@ -50,6 +42,15 @@ RUN apt-get -qq update && \
     lsb-release \
     libssl-dev \
     libreadline-dev
+
+# Add Cloudant APT repo
+{% if os_brand == 'ubuntu' %}
+RUN echo "deb [arch=amd64] http://apt-us.cloudant.net/cloudant-{{os_brand}} {{os_codename}}-production main" >> /etc/apt/sources.list
+{% else %}
+RUN echo "deb http://apt-us.cloudant.net/cloudant-{{os_brand}} {{os_codename}}-production main" >> /etc/apt/sources.list
+{% endif %}
+RUN curl http://apt.cloudant.net/Cloudant.gpg.key | apt-key add -
+RUN apt-get -qq update
 
 {% if os_codename == 'lucid' %}
 RUN apt-get install -qq -y git-core
