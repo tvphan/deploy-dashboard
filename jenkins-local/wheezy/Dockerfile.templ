@@ -73,5 +73,9 @@ RUN aptly publish repo -distribution=wheezy -architectures="amd64" -config="/hom
 
 USER root
 
+# Workaround for issue with the "cabin" gem: https://github.com/jordansissel/fpm/issues/1051
+RUN gem uninstall -aIx cabin
+RUN gem install -f cabin -v 0.7.2
+
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
