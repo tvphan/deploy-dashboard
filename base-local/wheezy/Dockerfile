@@ -33,7 +33,6 @@ RUN apt-get -qq update && \
     rsync \
     ruby1.8-dev \
     rubygems \
-    s3cmd \
     subversion \
     sudo \
     tar \
@@ -53,7 +52,7 @@ RUN wget -q http://www.erlang.org/download/otp_src_17.5.tar.gz && \
     make install
 
 # Install python modules
-RUN pip install -q jinja2 pyyaml
+RUN pip install -q jinja2 pyyaml s3cmd
 
 # Install a basic SSH server
 RUN apt-get install -y --force-yes openssh-server
