@@ -1,0 +1,36 @@
+#charts {
+    margin: 1em 0;
+    width:100%;
+}
+.chart {
+    height:250px;
+    padding: 20px;
+}
+.chart.hidden {
+    height: 0px;
+}
+.chart.hidden img {
+    display:none;
+}
+#vertical {
+    position:fixed;
+    top:0;
+    height:100%;
+    width:1px;
+    background-color:#cccccc;
+    pointer-events:none;
+}
+
+.timeselect {
+    border-bottom:1px dotted #fff;
+    cursor:pointer;
+}
+
+ul.no-bullets {
+  list-style: none;
+}
+
+a.cluster-links {
+  font-weight: 300;
+  font-size: 22px;
+}
